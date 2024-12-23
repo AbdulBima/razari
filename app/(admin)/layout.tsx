@@ -25,7 +25,7 @@ export default function RootLayout({
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex flex-1 w-full flex-col ml-0 md:ml-[15vw] overflow-y-auto h-screen">
+          <div className="flex flex-1 w-full flex-col ml-0 md:ml-[15vw] overflow-y-auto h-full">
             <DashboardNavbar />
             <div className="poppins-regular">{children}</div>
           </div>

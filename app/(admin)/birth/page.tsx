@@ -41,6 +41,7 @@ const BirthDashboard = () => {
   
     // Ensure "Overall" (default selection) filters all data initially
     setFilteredData(tableData); 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   
   useEffect(() => {

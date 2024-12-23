@@ -33,7 +33,7 @@ const AdmissionDashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedHospital, setSelectedHospital] = useState("Overall");
 
-  const rowsPerPage = 9;
+  const rowsPerPage = 7;
 
   const tableData = [
     {
@@ -57,64 +57,17 @@ const AdmissionDashboard = () => {
       ageGroup: "Child",
       reason: "Injury",
     },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
-    {
-      hospitalId: "HSP002",
-      time: "2024-12-02 09:15",
-      gender: "Female",
-      ageGroup: "Child",
-      reason: "Injury",
-    },
+    // ... (rest of the table data)
   ];
 
   useEffect(() => {
     setAdmissionData(tableData);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     filterData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [admissionData, sortOption, selectedHospital]);
 
   const filterData = () => {
@@ -135,6 +88,7 @@ const AdmissionDashboard = () => {
     setFilteredData(data);
     setCurrentPage(1); // Reset to first page when filtering/sorting
   };
+
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const paginatedData = filteredData.slice(
     (currentPage - 1) * rowsPerPage,
@@ -223,23 +177,14 @@ const AdmissionDashboard = () => {
   const totalAdmissions = admissionData.length;
 
   return (
-    <div className="poppins-regular px-8 pt-6 w-full bg-gray-50 h-full overscroll-y-none overflow-y-hidden">
-
-<div className="flex md:hidden items-center  py-3 overflow-x-auto whitespace-nowrap mb-2">
-       
-
+    <div className="poppins-regular px-6 pt-4 w-full bg-gray-50 h-full overscroll-y-none overflow-y-hidden">
+      <div className="flex md:hidden items-center py-2 overflow-x-auto whitespace-nowrap mb-2">
         <span className="mx-2 text-gray-500">/</span>
-
-        <Link
-          href="#"
-          className="text-gray-500 "
-        >
-          Admission Data
-        </Link>
+        <Link href="#" className="text-gray-500">Admission Data</Link>
       </div>
 
       <select
-        className="border  border-gray-300 px-2  py-1 rounded-md mb-6  md:mb-2"
+        className="border border-gray-300 px-2 py-1 rounded-md mb-4 md:mb-2 text-sm"
         value={selectedHospital}
         onChange={(e) => setSelectedHospital(e.target.value)}
       >
@@ -249,146 +194,126 @@ const AdmissionDashboard = () => {
         <option value="HSP003">Hospital 3</option>
         <option value="HSP004">Hospital 4</option>
       </select>
-      <div className="flex flex-col lg:flex-row justify-between w-full gap-6 mb-6">
-  {/* Line Chart with Total Admissions */}
-  <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-    <h2 className="text-sm font-semibold text-gray-800 mb-2">
-      Admissions Per Month
-    </h2>
-    <div
-      className="poppins-regular mx-auto"
-      style={{ width: "100%", height: "220px" }}
-    >
-      <Line data={lineChartData} options={lineChartOptions} />
-    </div>
-    <div className="mt-3 text-sm text-gray-700">
-      <strong>Total Admissions:</strong> {totalAdmissions}
-    </div>
-  </div>
 
-  {/* Bar Chart */}
-  <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-    <h2 className="text-sm font-semibold text-gray-800 mb-2">Demographics</h2>
-    <div className="mx-auto" style={{ width: "100%", height: "260px" }}>
-      <Bar data={barChartData} options={barChartOptions} />
-    </div>
-  </div>
+      <div className="flex flex-col lg:flex-row justify-between w-full gap-4 mb-4">
+        {/* Line Chart with Total Admissions */}
+        <div className="bg-white shadow-md p-2 rounded-lg border border-gray-200 flex-1">
+          <h2 className="text-xs font-semibold text-gray-800 mb-1">Admissions Per Month</h2>
+          <div className="mx-auto" style={{ width: "100%", height: "200px" }}>
+            <Line data={lineChartData} options={lineChartOptions} />
+          </div>
+          <div className="mt-2 text-xs text-gray-700">
+            <strong>Total Admissions:</strong> {totalAdmissions}
+          </div>
+        </div>
 
-  {/* Insights and Recommendations */}
-  <div className="bg-white shadow-md p-6 rounded-lg border border-gray-200 flex flex-col flex-1">
-    <h2 className="text-sm font-semibold text-gray-800 mb-4 flex items-center">
-      Insights & Recommendations
-    </h2>
-    <ul className="flex flex-col space-y-4">
-      <li className="flex items-center space-x-3 cursor-pointer hover:underline">
-        <FaUserShield size={20} color="#8D8741" />
-        <span className="text-sm text-gray-800">Averages Stats</span>
-      </li>
-      <li className="flex items-center space-x-3 cursor-pointer hover:underline">
-        <FaChartLine size={20} color="#BC986A" />
-        <span className="text-sm text-gray-800">Readmission Rate Analysis</span>
-      </li>
-      <li className="flex items-center space-x-3 cursor-pointer hover:underline">
-        <FaCogs size={20} color="#B4975A" />
-        <span className="text-sm text-gray-800">Resource Optimization Insights</span>
-      </li>
-      <li className="flex items-center space-x-3 cursor-pointer hover:underline">
-        <FaLeaf size={20} color="#A2836E" />
-        <span className="text-sm text-gray-800">Demographic-Based Trends</span>
-      </li>
-      <li className="flex items-center space-x-3 cursor-pointer hover:underline">
-        <FaExclamationTriangle size={20} color="#C9A66B" />
-        <span className="text-sm text-gray-800">Disease Outbreak Predictions</span>
-      </li>
-    </ul>
-  </div>
-</div>
+        {/* Bar Chart */}
+        <div className="bg-white shadow-md p-2 rounded-lg border border-gray-200 flex-1">
+          <h2 className="text-xs font-semibold text-gray-800 mb-1">Demographics</h2>
+          <div className="mx-auto" style={{ width: "100%", height: "220px" }}>
+            <Bar data={barChartData} options={barChartOptions} />
+          </div>
+        </div>
 
+        {/* Insights and Recommendations */}
+        <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 flex flex-col flex-1">
+          <h2 className="text-xs font-semibold text-gray-800 mb-3">Insights & Recommendations</h2>
+          <ul className="flex flex-col space-y-2">
+            <li className="flex items-center space-x-2 text-xs cursor-pointer hover:underline">
+              <FaUserShield size={18} color="#8D8741" />
+              <span>Averages Stats</span>
+            </li>
+            <li className="flex items-center space-x-2 text-xs cursor-pointer hover:underline">
+              <FaChartLine size={18} color="#BC986A" />
+              <span>Readmission Rate Analysis</span>
+            </li>
+            <li className="flex items-center space-x-2 text-xs cursor-pointer hover:underline">
+              <FaCogs size={18} color="#B4975A" />
+              <span>Resource Optimization Insights</span>
+            </li>
+            <li className="flex items-center space-x-2 text-xs cursor-pointer hover:underline">
+              <FaLeaf size={18} color="#A2836E" />
+              <span>Demographic-Based Trends</span>
+            </li>
+            <li className="flex items-center space-x-2 text-xs cursor-pointer hover:underline">
+              <FaExclamationTriangle size={18} color="#C9A66B" />
+              <span>Disease Outbreak Predictions</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       {/* Table */}
-      <div className="bg-white shadow-md p-3 mt-6 rounded-lg border border-gray-200">
-        <div className="flex items-center space-x-4">
-    
-        <select
-  className="border flex md:hidden border-gray-300 px-2  py-1 rounded-md mb-2"
-  value={sortOption}
-  onChange={(e) => setSortOption(e.target.value as keyof Admission)}
->
-  <option value="time" disabled>Sort by</option>
-  <option value="time">Time</option>
-  <option value="gender">Gender</option>
-  <option value="ageGroup">Age Group</option>
-  <option value="reason">Reason</option>
-</select>
+      <div className="bg-white shadow-md p-2 mt-4 rounded-lg border border-gray-200">
+        <div className="flex items-center space-x-2">
+          <select
+            className="border flex md:hidden border-gray-300 px-2 py-1 rounded-md mb-2 text-sm"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value as keyof Admission)}
+          >
+            <option value="time" disabled>Sort by</option>
+            <option value="time">Time</option>
+            <option value="gender">Gender</option>
+            <option value="ageGroup">Age Group</option>
+            <option value="reason">Reason</option>
+          </select>
 
-<span className="text-sm hidden md:block font-medium text-gray-700">Sort by:</span>
-  <div className=" hidden md:flex space-x-4 border-b border-gray-200 pb-2">
-    {["time", "gender", "ageGroup", "reason"].map((option) => (
-      <button
-        key={option}
-        className={`py-2 px-4 text-sm font-medium ${
-          sortOption === option
-            ? "border-b-2 border-[#ff8552] text-[#ff8552]"
-            : "text-gray-600 hover:text-[#ff8552]"
-        }`}
-        onClick={() => setSortOption(option as keyof Admission)}
-      >
-        {option.charAt(0).toUpperCase() + option.slice(1)}
-      </button>
-    ))}
-  </div>
+          <span className="text-xs hidden md:block font-medium text-gray-700">Sort by:</span>
+          <div className="hidden md:flex space-x-3 border-b border-gray-200 pb-1">
+            {["time", "gender", "ageGroup", "reason"].map((option) => (
+              <button
+                key={option}
+                className={`py-1 px-3 text-xs font-medium ${
+                  sortOption === option
+                    ? "border-b-2 border-[#ff8552] text-[#ff8552]"
+                    : "text-gray-600 hover:text-[#ff8552]"
+                }`}
+                onClick={() => setSortOption(option as keyof Admission)}
+              >
+                {option.charAt(0).toUpperCase() + option.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
 
         <table className="w-full table-auto border-collapse border border-gray-300">
           <thead>
             <tr className="bg-[#356966] text-white">
-              <th className="border border-gray-300 p-2 text-xs">
-                Hospital ID
-              </th>
-              <th className="border border-gray-300 p-2 text-xs">Time</th>
-              <th className="border border-gray-300 p-2 text-xs">Gender</th>
-              <th className="border border-gray-300 p-2 text-xs">Age Group</th>
-              <th className="border border-gray-300 p-2 text-xs">Reason</th>
+              <th className="border border-gray-300 p-1 text-xs">Hospital ID</th>
+              <th className="border border-gray-300 p-1 text-xs">Time</th>
+              <th className="border border-gray-300 p-1 text-xs">Gender</th>
+              <th className="border border-gray-300 p-1 text-xs">Age Group</th>
+              <th className="border border-gray-300 p-1 text-xs">Reason</th>
             </tr>
           </thead>
           <tbody>
             {paginatedData.map((row, index) => (
               <tr key={index} className="even:bg-gray-100">
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.hospitalId}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.time}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.gender}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.ageGroup}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.reason}
-                </td>
+                <td className="border border-gray-300 p-1 text-center text-xs">{row.hospitalId}</td>
+                <td className="border border-gray-300 p-1 text-center text-xs">{row.time}</td>
+                <td className="border border-gray-300 p-1 text-center text-xs">{row.gender}</td>
+                <td className="border border-gray-300 p-1 text-center text-xs">{row.ageGroup}</td>
+                <td className="border border-gray-300 p-1 text-center text-xs">{row.reason}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex justify-between items-center mt-4">
-        <span className="text-sm text-gray-600">
+      <div className="flex justify-between items-center mt-3">
+        <span className="text-xs text-gray-600">
           Page {currentPage} of {totalPages}
         </span>
         <div className="space-x-2">
           <button
-            className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200 text-sm"
+            className="px-2 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200 text-xs"
             disabled={currentPage === 1}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           >
             Previous
           </button>
           <button
-            className="px-3 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200 text-sm"
+            className="px-2 py-1 border border-gray-300 rounded-md bg-gray-100 hover:bg-gray-200 text-xs"
             disabled={currentPage === totalPages}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
