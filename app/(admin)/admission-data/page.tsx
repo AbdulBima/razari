@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Line, Bar } from "react-chartjs-2";
+import { Line,  Pie } from "react-chartjs-2";
 import "chart.js/auto";
 import {
   FaUserShield,
@@ -135,7 +135,7 @@ const AdmissionDashboard = () => {
     plugins: { legend: { display: false } },
   };
 
-  const barChartData = {
+  const pieChartData = {
     labels: [
       "Adults - Male",
       "Adults - Female",
@@ -152,27 +152,20 @@ const AdmissionDashboard = () => {
           demographics.children.female,
         ],
         backgroundColor: ["#899d78", "#da4167", "#f7ec59", "#f0bcd4"],
+        hoverBackgroundColor: ["#728a63", "#c53455", "#e6d54d", "#e3a1bf"],
       },
     ],
   };
-
-  const barChartOptions = {
-    indexAxis: "y" as const,
-    maintainAspectRatio: false,
-    scales: {
-      x: {
-        grid: { display: false },
-      },
-      y: {
-        grid: { display: false },
-      },
-    },
+  
+  const pieChartOptions = {
     plugins: {
-      legend: {
-        display: false,
-      },
+      legend: { position: "bottom" as const },
+      
     },
+    cutout: "60%",
+    maintainAspectRatio: false,
   };
+  
 
   const totalAdmissions = admissionData.length;
 
@@ -209,11 +202,11 @@ const AdmissionDashboard = () => {
 
         {/* Bar Chart */}
         <div className="bg-white shadow-md p-2 rounded-lg border border-gray-200 flex-1">
-          <h2 className="text-xs font-semibold text-gray-800 mb-1">Demographics</h2>
-          <div className="mx-auto" style={{ width: "100%", height: "220px" }}>
-            <Bar data={barChartData} options={barChartOptions} />
-          </div>
-        </div>
+  <h2 className="text-xs font-semibold text-gray-800 mb-1">Demographics</h2>
+  <div className="mx-auto" style={{ width: "100%", height: "220px" }}>
+    <Pie data={pieChartData} options={pieChartOptions} />
+  </div>
+</div>
 
         {/* Insights and Recommendations */}
         <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 flex flex-col flex-1">

@@ -21,7 +21,7 @@ const EmergencyDashboard = () => {
   const rowsPerPage = 5;
 
   const monthlyEmergencies = [15, 22, 30, 28, 40, 50, 45, 55, 38, 42, 60, 70];
-  const typeDistribution = { Accident: 50, "Heart Attack": 30, Burns: 20 };
+  const typeDistribution = { Accident: 50, "Medical Emergency": 30, Burns: 20 };
   const severityDistribution = { Critical: 40, Moderate: 60, Mild: 80 };
 
   const tableData = [
@@ -168,7 +168,18 @@ const EmergencyDashboard = () => {
             Emergency Type Distribution
           </h2>
           <div style={{ width: "100%", height: "220px" }}>
-            <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+            <Pie data={pieChartData}  options={{
+          plugins: {
+            legend: { position: "top" },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${context.raw}`,
+              },
+            },
+          },
+          cutout: "60%",
+          maintainAspectRatio: false,
+        }} />
           </div>
         </div>
 

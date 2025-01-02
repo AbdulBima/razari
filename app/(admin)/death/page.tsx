@@ -218,7 +218,18 @@ const DeathDashboard = () => {
             className="poppins-regular mx-auto"
             style={{ width: "100%", height: "220px" }}
           >
-            <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+            <Pie data={pieChartData}  options={{
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${context.raw}`,
+              },
+            },
+          },
+          cutout: "60%",
+          maintainAspectRatio: false,
+        }} />
           </div>
         </div>
 

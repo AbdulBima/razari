@@ -20,8 +20,8 @@ const hospitals = [
 ];
 
 const roles = [
-  "Cardiologist",
-  "Pediatrician",
+  "Admission Staff",
+  "Health Record Officer",
   "Neurologist",
   "Orthopedic Surgeon",
   "General Practitioner",
@@ -29,8 +29,8 @@ const roles = [
 
 const StaffManagement = () => {
   const [staffList, setStaffList] = useState<Staff[]>([
-    { id: 1, name: "Dr. Ayo Adewale", role: "Cardiologist", email: "ayo.adewale@lagosmed.com", password: "secure123", hospital: "Lagos General Hospital" },
-    { id: 2, name: "Dr. Fatima Hassan", role: "Pediatrician", email: "fatima.hassan@abujahospital.com", password: "children123", hospital: "Abuja National Hospital" },
+    { id: 1, name: "Dr. Ayo Adewale", role: "Admission Staf", email: "ayo.adewale@lagosmed.com", password: "secure123", hospital: "Lagos General Hospital" },
+    { id: 2, name: "Dr. Fatima Hassan", role: "Health Record Officer", email: "fatima.hassan@abujahospital.com", password: "children123", hospital: "Abuja National Hospital" },
     { id: 3, name: "Dr. Kwame Mensah", role: "Neurologist", email: "kwame.mensah@accrahospital.com", password: "brainy456", hospital: "Accra Specialist Clinic" },
     { id: 4, name: "Dr. Zanele Ndlovu", role: "Orthopedic Surgeon", email: "zanele.ndlovu@capetownmed.com", password: "strongbones", hospital: "Cape Town Medical Center" },
     // Add more staff data for pagination demonstration
@@ -94,7 +94,7 @@ const StaffManagement = () => {
   );
 
   return (
-    <div className="p-4 bg-gray-50 h-full overflow-hidden overscroll-y-none text-sm">
+    <div className="poppins-regular px-8 pt-6 w-full bg-gray-50 h-full overscroll-y-none overflow-y-hidden">
       <h1 className="text-lg font-semibold mb-4">Staffs</h1>
       <div className="mb-2 flex justify-between">
         <button
@@ -166,7 +166,7 @@ const StaffManagement = () => {
       {/* Modal for Adding/Editing Staff */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-md w-2/3 text-xs">
+          <div className="bg-white p-4 rounded-lg shadow-md w-40 text-xs">
             <h2 className="text-sm font-bold mb-2">
               {editingStaff ? "Edit Medical Staff" : "Add Medical Staff"}
             </h2>

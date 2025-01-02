@@ -93,10 +93,10 @@ const BirthDashboard = () => {
   };
 
   const barChartData = {
-    labels: ["CS", "Natural"],
+    labels: ["CS", "Vaginal Delivery"],
     datasets: [
       {
-        label: "Mode of Birth",
+        label: "Mode of Delivery",
         data: [modeDistribution.cs, modeDistribution.natural],
         backgroundColor: ["#8d8741", "#bc986a"],
       },
@@ -189,7 +189,18 @@ const BirthDashboard = () => {
             className="poppins-regular mx-auto"
             style={{ width: "100%", height: "220px" }}
           >
-            <Pie data={pieChartData} options={{ maintainAspectRatio: false }} />
+            <Pie data={pieChartData}  options={{
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (context) => `${context.label}: ${context.raw}`,
+              },
+            },
+          },
+          cutout: "60%",
+          maintainAspectRatio: false,
+        }} />
           </div>
         </div>
 
