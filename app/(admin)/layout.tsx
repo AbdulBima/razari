@@ -25,9 +25,9 @@ export default function RootLayout({
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex  flex-1 w-full flex-col ml-0 md:ml-[15vw] overflow-y-auto h-full">
+          <div className="flex  flex-1 w-full flex-col ml-0 md:ml-[15vw] md:overflow-hidden h-full">
             <DashboardNavbar />
-            <div className="poppins-regular pt-16">{children}</div> {/* Add padding top to avoid overlap with fixed navbar */}
+            <div className="poppins-regular md:pt-16 pb-5">{children}</div> {/* Add padding top to avoid overlap with fixed navbar */}
           </div>
         </div>
       </body>

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Line, Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import Breadcrumb from "@/components/navigation/Breadcrumb";
 
 type Category = "Diagnosis" | "Admission" | "Birth" | "Emergency" | "Death";
 
@@ -104,7 +105,17 @@ const categoryIcons: Record<Category, React.ReactNode> = {
     </svg>
   ),
   Admission: (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#356966" d="M20 9.556V3h-2v2H6V3H4v6.557C2.81 10.25 2 11.526 2 13v4a1 1 0 0 0 1 1h1v4h2v-4h12v4h2v-4h1a1 1 0 0 0 1-1v-4c0-1.474-.811-2.75-2-3.444M11 9H6V7h5zm7 0h-5V7h5z"/></svg>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path
+        fill="#356966"
+        d="M20 9.556V3h-2v2H6V3H4v6.557C2.81 10.25 2 11.526 2 13v4a1 1 0 0 0 1 1h1v4h2v-4h12v4h2v-4h1a1 1 0 0 0 1-1v-4c0-1.474-.811-2.75-2-3.444M11 9H6V7h5zm7 0h-5V7h5z"
+      />
+    </svg>
   ),
   Birth: (
     <svg
@@ -157,32 +168,78 @@ const broadDiseaseCategories = [
 const diagnosisTableData = [
   {
     hospitalId: "H001",
-    time: "Jan",
+    time: "01/01/2023",
     diagnosis: "Hypertension",
     ageGroup: "40-60",
   },
-  { hospitalId: "H002", time: "Feb", diagnosis: "Asthma", ageGroup: "20-40" },
-  { hospitalId: "H003", time: "Mar", diagnosis: "Stroke", ageGroup: "60+" },
-  { hospitalId: "H004", time: "Apr", diagnosis: "Ulcer", ageGroup: "20-40" },
-  { hospitalId: "H005", time: "May", diagnosis: "Diabetes", ageGroup: "40-60" },
-  { hospitalId: "H006", time: "Jun", diagnosis: "Arthritis", ageGroup: "60+" },
+  {
+    hospitalId: "H002",
+    time: "01/02/2023",
+    diagnosis: "Asthma",
+    ageGroup: "20-40",
+  },
+  {
+    hospitalId: "H003",
+    time: "01/03/2023",
+    diagnosis: "Stroke",
+    ageGroup: "60+",
+  },
+  {
+    hospitalId: "H004",
+    time: "01/04/2023",
+    diagnosis: "Ulcer",
+    ageGroup: "20-40",
+  },
+  {
+    hospitalId: "H005",
+    time: "01/05/2023",
+    diagnosis: "Diabetes",
+    ageGroup: "40-60",
+  },
+  {
+    hospitalId: "H006",
+    time: "01/06/2023",
+    diagnosis: "Arthritis",
+    ageGroup: "60+",
+  },
   {
     hospitalId: "H007",
-    time: "Jul",
+    time: "01/07/2023",
     diagnosis: "Bronchitis",
     ageGroup: "20-40",
   },
-  { hospitalId: "H008", time: "Aug", diagnosis: "Cancer", ageGroup: "60+" },
+  {
+    hospitalId: "H008",
+    time: "01/08/2023",
+    diagnosis: "Cancer",
+    ageGroup: "60+",
+  },
   {
     hospitalId: "H009",
-    time: "Sep",
+    time: "01/09/2023",
     diagnosis: "Heart Disease",
     ageGroup: "40-60",
   },
-  { hospitalId: "H010", time: "Oct", diagnosis: "Pneumonia", ageGroup: "60+" },
-  { hospitalId: "H011", time: "Nov", diagnosis: "Migraine", ageGroup: "20-40" },
-  { hospitalId: "H012", time: "Dec", diagnosis: "Anemia", ageGroup: "40-60" },
+  {
+    hospitalId: "H010",
+    time: "01/10/2023",
+    diagnosis: "Pneumonia",
+    ageGroup: "60+",
+  },
+  {
+    hospitalId: "H011",
+    time: "01/11/2023",
+    diagnosis: "Migraine",
+    ageGroup: "20-40",
+  },
+  {
+    hospitalId: "H012",
+    time: "01/12/2023",
+    diagnosis: "Anemia",
+    ageGroup: "40-60",
+  },
 ];
+
 
 const Dashboard = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -252,134 +309,136 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="px-6 py-6 pt-6 bg-gray-100 h-full w-full overflow-hidden overscroll-y-none">
-      {/* Top Overview Cards */}
-      <div className="grid grid-cols-5  gap-6 mb-4">
-        {Object.keys(categoryData).map((key, index) => {
-          const category = key as Category;
-          return (
-            <div
-              key={index}
-              className="relative bg-white shadow-lg rounded-lg p-3 flex items-center border-l-[6px] border-transparent"
-              style={{ borderColor: "#356966" }}
-            >
-              <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
-                {categoryIcons[category]}
-              </div>
-              <div className="ml-3">
-                <h3 className="text-gray-800 font-bold text-sm">
-                  {calculateTotal(category)}
-                </h3>
-                <p className="text-gray-600 text-xs">{category}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+    <div className="md:px-8 py-4 px-6 bg-gray-100 h-full w-full overflow-hidden overscroll-y-none">
+     <Breadcrumb secondLink = {{href: "/dashboard",label: "Dashboard" }} />
 
-      {/* Main Content Section */}
-      <div className="grid grid-cols-4 gap-4">
-        {/* Pie Chart Section */}
-        <div className="bg-white shadow-md px-2 py-6 rounded-lg border border-gray-200 flex">
-          <div style={{ height: "200px" }}>
-            <Pie
-              data={pieChartData}
-              options={{
-                plugins: {
-                  legend: { position: "bottom" },
-                  tooltip: {
-                    callbacks: {
-                      label: (context) => `${context.label}: ${context.raw}`,
-                    },
-                  },
+  {/* Top Overview Cards */}
+  <div className="grid grid-cols-2 mt-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+    {Object.keys(categoryData).map((key, index) => {
+      const category = key as Category;
+      return (
+        <div
+          key={index}
+          className="relative bg-white shadow-lg rounded-lg p-3 flex items-center border-l-[6px] border-transparent"
+          style={{ borderColor: "#356966" }}
+        >
+          <div className="w-10 h-10 bg-gray-100 rounded-xl flex items-center justify-center">
+            {categoryIcons[category]}
+          </div>
+          <div className="ml-3">
+            <h3 className="text-gray-800 font-bold text-sm">
+              {calculateTotal(category)}
+            </h3>
+            <p className="text-gray-600 text-xs">{category}</p>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  {/* Main Content Section */}
+  <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+    {/* Pie Chart Section */}
+    <div className="bg-white shadow-md px-4 py-4 rounded-lg border border-gray-200">
+      <h2 className="text-sm font-semibold text-gray-800 mb-4 text-center">
+        Disease Categories
+      </h2>
+      <div className="flex justify-center" style={{ height: "200px" }}>
+        <Pie
+          data={pieChartData}
+          options={{
+            plugins: {
+              legend: { position: "bottom" },
+              tooltip: {
+                callbacks: {
+                  label: (context) => `${context.label}: ${context.raw}`,
                 },
-                cutout: "60%",
-                maintainAspectRatio: false,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* Line Chart */}
-        <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 col-span-3">
-          <h2 className="text-sm font-semibold text-gray-800 mb-2">
-            Trends Over Time
-          </h2>
-          <div style={{ height: "200px" }}>
-            <Line
-              data={lineChartData}
-              options={{
-                maintainAspectRatio: false,
-                scales: {
-                  x: { grid: { drawOnChartArea: false } },
-                  y: { grid: { drawOnChartArea: false } },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Diagnosis Table */}
-      <div className="bg-white  shadow-sm p-2 rounded-xl mt-4">
-        <h2 className="text-xs font-semibold text-gray-800 mb-1">
-          Diagnosis Data
-        </h2>
-        <table className="w-full table-auto border-collapse border border-gray-300">
-          <thead>
-            <tr className="bg-[#356966] text-white">
-              <th className="border border-gray-300 p-2 text-xs">
-                Hospital ID
-              </th>
-              <th className="border border-gray-300 p-2 text-xs">Time</th>
-              <th className="border border-gray-300 p-2 text-xs">Diagnosis</th>
-              <th className="border border-gray-300 p-2 text-xs">Age Group</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedData.map((row, index) => (
-              <tr key={index} className="even:bg-gray-100">
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.hospitalId}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.time}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.diagnosis}
-                </td>
-                <td className="border border-gray-300 p-2 text-center text-xs">
-                  {row.ageGroup}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="flex text-xs justify-between items-center mt-4">
-          <span className="text-xs text-gray-600">Page {currentPage} of 2</span>
-          <div className="flex space-x-2">
-            <button
-              className={`px-3 py-1 border rounded ${
-                currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
-              }`}
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button
-              className={`px-3 py-1 border rounded ${
-                currentPage === 2 ? "cursor-not-allowed opacity-50" : ""
-              }`}
-              onClick={() => setCurrentPage((prev) => Math.min(prev + 1, 2))}
-              disabled={currentPage === 2}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+              },
+            },
+            cutout: "60%",
+            maintainAspectRatio: false,
+          }}
+        />
       </div>
     </div>
+
+    {/* Line Chart */}
+    <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 lg:col-span-3">
+      <h2 className="text-sm font-semibold text-gray-800 mb-2">
+        Trends Over Time
+      </h2>
+      <div style={{ height: "200px" }}>
+        <Line
+          data={lineChartData}
+          options={{
+            maintainAspectRatio: false,
+            scales: {
+              x: { grid: { drawOnChartArea: false } },
+              y: { grid: { drawOnChartArea: false } },
+            },
+          }}
+        />
+      </div>
+    </div>
+  </div>
+
+  {/* Diagnosis Table */}
+  <div className="bg-white shadow-sm p-4 rounded-lg mt-4 overflow-x-auto">
+    <h2 className="text-xs font-semibold text-gray-800 mb-2">Diagnosis Data</h2>
+    <table className="w-full table-auto border-collapse border border-gray-300">
+      <thead>
+        <tr className="bg-[#356966] text-white">
+          <th className="border border-gray-300 p-2 text-xs">Hospital ID</th>
+          <th className="border border-gray-300 p-2 text-xs">Time</th>
+          <th className="border border-gray-300 p-2 text-xs">Diagnosis</th>
+          <th className="border border-gray-300 p-2 text-xs">Age Group</th>
+        </tr>
+      </thead>
+      <tbody>
+        {paginatedData.map((row, index) => (
+          <tr key={index} className="even:bg-gray-100">
+            <td className="border border-gray-300 p-2 text-center text-xs">
+              {row.hospitalId}
+            </td>
+            <td className="border border-gray-300 p-2 text-center text-xs">
+              {row.time}
+            </td>
+            <td className="border border-gray-300 p-2 text-center text-xs">
+              {row.diagnosis}
+            </td>
+            <td className="border border-gray-300 p-2 text-center text-xs">
+              {row.ageGroup}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+    <div className="flex text-xs justify-between items-center mt-4">
+      <span className="text-xs text-gray-600">Page {currentPage} of 2</span>
+      <div className="flex space-x-2">
+        <button
+          className={`px-3 py-1 border rounded ${
+            currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
+          }`}
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+        <button
+          className={`px-3 py-1 border rounded ${
+            currentPage === 2 ? "cursor-not-allowed opacity-50" : ""
+          }`}
+          onClick={() => setCurrentPage((prev) => Math.min(prev + 1, 2))}
+          disabled={currentPage === 2}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
   );
 };
 
