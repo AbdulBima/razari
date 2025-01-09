@@ -11,7 +11,9 @@ type Staff = {
   email: string;
   password: string;
   hospital: string;
+  isActive: boolean; // New property
 };
+
 
 const hospitals = [
   "Lagos General Hospital",
@@ -21,11 +23,12 @@ const hospitals = [
 ];
 
 const roles = [
-  "Admission Staff",
+  "Daily Admissions Record Officer",
+  "Consultant",
+  "Emergency  Record Officer",
+  "Death Record Officer",
+  "Birth Record Officer",
   "Health Record Officer",
-  "Neurologist",
-  "Orthopedic Surgeon",
-  "General Practitioner",
 ];
 
 const fetchStaffList = (): Promise<Staff[]> => {
@@ -39,6 +42,7 @@ const fetchStaffList = (): Promise<Staff[]> => {
           email: "ayo.adewale@lagosmed.com",
           password: "secure123",
           hospital: "Lagos General Hospital",
+          isActive: true, // Set as active initially
         },
         {
           id: 2,
@@ -47,6 +51,7 @@ const fetchStaffList = (): Promise<Staff[]> => {
           email: "fatima.hassan@abujahospital.com",
           password: "children123",
           hospital: "Abuja National Hospital",
+          isActive: true, // Set as active initially
         },
         {
           id: 3,
@@ -55,6 +60,7 @@ const fetchStaffList = (): Promise<Staff[]> => {
           email: "kwame.mensah@accrahospital.com",
           password: "brainy456",
           hospital: "Accra Specialist Clinic",
+          isActive: true, // Set as active initially
         },
         {
           id: 4,
@@ -63,11 +69,13 @@ const fetchStaffList = (): Promise<Staff[]> => {
           email: "zanele.ndlovu@capetownmed.com",
           password: "strongbones",
           hospital: "Cape Town Medical Center",
+          isActive: true, // Set as active initially
         },
       ]);
     }, 2000);
   });
 };
+
 
 const StaffManagement: React.FC = () => {
   const [staffList, setStaffList] = useState<Staff[]>([]);
@@ -153,6 +161,14 @@ const StaffManagement: React.FC = () => {
     setDeletingStaff(null);
   };
 
+  const handleToggleStatus = (staff: Staff) => {
+    setStaffList((prev) =>
+      prev.map((s) =>
+        s.id === staff.id ? { ...s, isActive: !s.isActive } : s
+      )
+    );
+  };
+  
   const handlePageChange = (direction: "next" | "prev") => {
     setCurrentPage((prevPage) =>
       direction === "next"
@@ -191,10 +207,11 @@ const StaffManagement: React.FC = () => {
       </div>
 
       {isLoading ? (
-        <div className="flex justify-center items-center">
-          <div className="w-8 h-8 border-4 border-t-4 border-gray-500 border-t-transparent rounded-full animate-spin"></div>
-        </div>
+       <div className="flex justify-center items-center h-screen">
+       <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+     </div>
       ) : (
+        <div className="overflow-x-auto">
         <table className="w-full mt-4 bg-white shadow-md rounded-lg table-auto border-collapse  text-sm">
           <thead>
             <tr className="bg-[#356966] text-white text-left">
@@ -235,53 +252,36 @@ const StaffManagement: React.FC = () => {
                 <td className=" px-2 py-2">{staff.role}</td>
                 <td className=" px-2 hidden md:block">{staff.email}</td>
                 <td className=" px-2 py-2">{staff.hospital}</td>
-                <td className=" px-2 text-center py-2 space-x-4 flex ">
-                  <button
-                    className="text-[#356966] hover:text-green-900"
-                    onClick={() => handleEditStaff(staff)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 100 100"
-                    >
-                      <path
-                        fill="#356966"
-                        d="M28.135 33.154a3.5 3.5 0 0 0-2.668 1.235L.832 63.404c-1.93 2.275-.313 5.767 2.67 5.766l93-.065c2.981-.002 4.595-3.492 2.666-5.765l-20.291-23.9l-4.73 5.244L88.94 62.11l-77.873.053l18.686-22.01H45.71c.418-1.27.788-2.537.98-3.795a43 43 0 0 1 2.164-3.205zM89.91 74.11l-9.178.008l8.211 9.67l-77.875.053l8.22-9.682l-9.188.008L.832 85.08c-1.93 2.274-.313 5.767 2.67 5.766l93-.065c2.981-.002 4.595-3.492 2.666-5.765z"
-                        color="#356966"
-                      />
-                      <path
-                        fill="#356966"
-                        d="M90.361.872a2.977 2.977 0 0 0-4.209 0l-34.81 34.81c-.29.29-.508.626-.653.985L45.934 53.29c-.218.687.117.98.858.753l16.541-4.732c.359-.145.695-.362.985-.653l34.81-34.81a2.977 2.977 0 0 0 0-4.21zm-7.576 11.786l4.557 4.557l-25.128 25.13l-4.558-4.559z"
-                        color="#356966"
-                      />
-                    </svg>
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => handleDeleteStaff(staff)}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        fill="none"
-                        stroke="red"
-                        strokeLinecap="round"
-                        strokeWidth="1.5"
-                        d="M9.17 4a3.001 3.001 0 0 1 5.66 0m5.67 2h-17m14.874 9.4c-.177 2.654-.266 3.981-1.131 4.79s-2.195.81-4.856.81h-.774c-2.66 0-3.99 0-4.856-.81c-.865-.809-.953-2.136-1.13-4.79l-.46-6.9m13.666 0l-.2 3M9.5 11l.5 5m4.5-5l-.5 5"
-                      />
-                    </svg>
-                  </button>
-                </td>
+                <td className="px-2 text-center py-2 space-x-4 flex">
+  <button
+    className="text-[#356966] bg-[#e0f7f3] hover:bg-[#c1d9d2] text-sm py-1 px-2 rounded"
+    onClick={() => handleEditStaff(staff)}
+  >
+    Edit 
+  </button>
+
+  <button
+    className={`${
+      staff.isActive ? "text-green-600 bg-[#e6f7ea]" : "text-gray-400 bg-[#f0f0f0]"
+    } hover:bg-green-100 text-sm py-1 px-2 rounded`}
+    onClick={() => handleToggleStatus(staff)}
+  >
+    {staff.isActive ? "Deactivate" : "Activate"}
+  </button>
+
+  <button
+    className="text-red-500 bg-[#fce4e4] hover:bg-[#f8d7da] text-sm py-1 px-2 rounded"
+    onClick={() => handleDeleteStaff(staff)}
+  >
+    Delete 
+  </button>
+</td>
+
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       )}
 
       <div className="flex justify-between items-center mt-4 text-xs">
@@ -307,108 +307,105 @@ const StaffManagement: React.FC = () => {
       </div>
 
       {showModal && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-              <h2 className="text-lg font-bold mb-4">
-                {editingStaff ? "Edit Staff" : "Add Staff"}
-              </h2>
-              <input
-                type="text"
-                placeholder="Name"
-                value={newStaff.name || ""}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, name: e.target.value })
-                }
-                className="w-full mb-2 p-2  rounded"
-              />
-              <select
-                value={newStaff.role || roles[0]}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, role: e.target.value })
-                }
-                className="w-full mb-2 p-2  rounded"
-              >
-                {roles.map((role) => (
-                  <option key={role} value={role}>
-                    {role}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="email"
-                placeholder="Email"
-                value={newStaff.email || ""}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, email: e.target.value })
-                }
-                className="w-full mb-2 p-2  rounded"
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={newStaff.password || ""}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, password: e.target.value })
-                }
-                className="w-full mb-2 p-2  rounded"
-              />
-              <select
-                value={newStaff.hospital || hospitals[0]}
-                onChange={(e) =>
-                  setNewStaff({ ...newStaff, hospital: e.target.value })
-                }
-                className="w-full mb-4 p-2  rounded"
-              >
-                {hospitals.map((hospital) => (
-                  <option key={hospital} value={hospital}>
-                    {hospital}
-                  </option>
-                ))}
-              </select>
-              <div className="flex justify-end space-x-2">
-                <button
-                  className="px-4 py-2 bg-gray-300 rounded-md"
-                  onClick={() => setShowModal(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 bg-[#356966] text-white rounded-md"
-                  onClick={handleAddOrUpdateStaff}
-                >
-                  {editingStaff ? "Update" : "Add"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed z-10 inset-0 overflow-y-auto">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="bg-white w-96 p-8 rounded-lg shadow-lg space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          {editingStaff ? "Edit Staff" : "Add Staff"}
+        </h2>
+        
+        <input
+          type="text"
+          placeholder="Name"
+          value={newStaff.name || ""}
+          onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+        />
 
-      {showDeleteModal && (
-        <div className="fixed z-10 inset-0 overflow-y-auto">
-          <div className="flex items-center justify-center min-h-screen">
-            <div className="bg-white w-96 p-6 rounded-lg shadow-lg">
-              <h2 className="text-lg font-bold mb-4">Confirm Delete</h2>
-              <p>Are you sure you want to delete this staff member?</p>
-              <div className="flex justify-end space-x-2 mt-4">
-                <button
-                  className="px-4 py-2 bg-gray-300 rounded-md"
-                  onClick={cancelDelete}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="px-4 py-2 bg-red-500 text-white rounded-md"
-                  onClick={confirmDeleteStaff}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
+        <select
+          value={newStaff.role || roles[0]}
+          onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+        >
+          {roles.map((role) => (
+            <option key={role} value={role}>
+              {role}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="email"
+          placeholder="Email"
+          value={newStaff.email || ""}
+          onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={newStaff.password || ""}
+          onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+        />
+
+        <select
+          value={newStaff.hospital || hospitals[0]}
+          onChange={(e) => setNewStaff({ ...newStaff, hospital: e.target.value })}
+          className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+        >
+          {hospitals.map((hospital) => (
+            <option key={hospital} value={hospital}>
+              {hospital}
+            </option>
+          ))}
+        </select>
+
+        <div className="flex justify-end space-x-4 mt-6">
+          <button
+            className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300 transition duration-200"
+            onClick={() => setShowModal(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-6 py-2 bg-[#356966] text-white rounded-md font-semibold hover:bg-[#2a4d46] transition duration-200"
+            onClick={handleAddOrUpdateStaff}
+          >
+            {editingStaff ? "Update" : "Add"}
+          </button>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
+{showDeleteModal && (
+  <div className="fixed z-10 inset-0 overflow-y-auto">
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="bg-white w-96 p-8 rounded-lg shadow-lg space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Confirm Delete</h2>
+        <p className="text-gray-700">Are you sure you want to delete this staff member?</p>
+        <div className="flex justify-end space-x-4 mt-6">
+          <button
+            className="px-6 py-2 bg-gray-200 text-gray-800 rounded-md font-semibold hover:bg-gray-300 transition duration-200"
+            onClick={cancelDelete}
+          >
+            Cancel
+          </button>
+          <button
+            className="px-6 py-2 bg-red-500 text-white rounded-md font-semibold hover:bg-red-600 transition duration-200"
+            onClick={confirmDeleteStaff}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };

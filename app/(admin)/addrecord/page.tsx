@@ -4,21 +4,24 @@ import React, { useState } from "react";
 import axios from "axios";
 
 import Breadcrumb from "@/components/navigation/Breadcrumb";
+import Link from "next/link";
 
 const HospitalDataForm = () => {
   const [activeTab, setActiveTab] = useState(1);
   const [formData, setFormData] = useState({
     gender: "",
-    ageGroup: "",
+    weight: "",
     admissionType: "",
     dateTime: "",
     diagnosis: "",
     secondaryDiagnosis: "",
     emergencyNature: "",
+    ageGroup: "",
     isEmergency: "",
     causeOfDeath: "",
     deliveryMode: "",
   });
+
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -94,11 +97,30 @@ const HospitalDataForm = () => {
   };
 
   return (
-    <div className=" w-full md:w-[70vw] overflow-y-auto mx-auto px-8  md:px-20 pb-10 bg-white flex flex-col justify-center relative">
-       <Breadcrumb secondLink = {{href: "/addrecord",label: "Add Record" }} />
-
-
+    <div className="oppins-regular  w-full md:w-[70vw] overflow-y-auto mx-auto px-8  md:px-20 pb-10 bg-white flex flex-col justify-center relative">
       {/* Tabs */}
+
+      <div className="flex items-center justify-between">
+        <Breadcrumb secondLink={{ href: "/addrecord", label: "Add Record" }} />
+        <Link
+          href="/recent-upload"
+          className="text-gray-600 flex flex-row justify-center items-center space-x-2 md:text-lg md:mt-6 text-sm underline  hover:text-[#356966] transition duration-300"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 32 32"
+          >
+            <path fill="black" d="M20.59 22L15 16.41V7h2v8.58l5 5.01z" />
+            <path
+              fill="black"
+              d="M16 2A13.94 13.94 0 0 0 6 6.23V2H4v8h8V8H7.08A12 12 0 1 1 4 16H2A14 14 0 1 0 16 2"
+            />
+          </svg>{" "}
+        <h1 className=" ">Recent Upload</h1>
+        </Link>
+      </div>
 
       <div className="hidden md:flex mb-6 pt-4">
         {[
@@ -121,6 +143,7 @@ const HospitalDataForm = () => {
           </button>
         ))}
       </div>
+
       {/* Tabs  mobile*/}
       <div className="mb-8  flex flex-col md:hidden pt-5">
         <label className="block text-lg text-orange-500">Select form</label>
@@ -143,7 +166,6 @@ const HospitalDataForm = () => {
           ))}
         </select>
       </div>
-
       {/* Form */}
       <form onSubmit={handleSubmit}>
         {/* Gender */}
@@ -158,24 +180,27 @@ const HospitalDataForm = () => {
             <option value="">Select</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Other">Other</option>
+       
           </select>
         </div>
 
         {/* Age Group */}
-        <div className="mb-4">
-          <label className="block">Age Group</label>
-          <select
-            name="ageGroup"
-            value={formData.ageGroup}
-            onChange={handleChange}
-            className="w-full md:p-2 px-4 py-2 appearance-none border rounded-lg"
-          >
-            <option value="">Select</option>
-            <option value="Child">Child</option>
-            <option value="Adult">Adult</option>
-          </select>
-        </div>
+        {activeTab !== 5 && (
+          <div className="mb-4">
+            <label className="block">Age Group</label>
+            <select
+              name="ageGroup"
+              value={formData.ageGroup}
+              onChange={handleChange}
+              className="w-full md:p-2 px-4 py-2 appearance-none border rounded-lg"
+            >
+              <option value="">Select</option>
+              <option value="Infant">Infant</option>
+              <option value="Child">Child</option>
+              <option value="Adult">Adult</option>
+            </select>
+          </div>
+        )}
 
         {/* Dynamic Fields */}
         {activeTab === 1 && (
@@ -211,6 +236,59 @@ const HospitalDataForm = () => {
                 value={formData.secondaryDiagnosis}
                 onChange={handleChange}
                 className="w-full p-2 border rounded-lg"
+              />
+            </div>
+          </>
+        )}
+
+        {activeTab === 3 && (
+          <>
+            <div className="mb-4">
+              <label className="block">Emergency Type</label>
+              <select
+                name="emergencyNature"
+                value={formData.emergencyNature}
+                onChange={handleChange}
+                className="w-full md:p-2 px-4 py-2 appearance-none border rounded-lg"
+              >
+                <option value="">Select</option>
+                <option value="Trauma">Trauma</option>
+                <option value="Medical">Medical</option>
+                <option value="Surgical">Surgical</option>
+                <option value="Obstetric">Obstetric</option>
+                <option value="Pediatric">Pediatric</option>
+              </select>
+            </div>
+          </>
+        )}
+
+        {activeTab === 4 && (
+          <>
+            <div className="mb-4">
+              <label className="block">Cause of Death</label>
+              <input
+                type="text"
+                name="causeOfDeath"
+                value={formData.causeOfDeath}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+              />
+            </div>
+          </>
+        )}
+
+        {activeTab === 5 && (
+          <>
+            {/* Weight */}
+            <div className="mb-4">
+              <label className="block">Weight (in kg)</label>
+              <input
+                type="number"
+                name="weight"
+                value={formData.weight || ""}
+                onChange={handleChange}
+                className="w-full p-2 border rounded-lg"
+                placeholder="Enter weight"
               />
             </div>
           </>

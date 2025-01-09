@@ -43,10 +43,10 @@ const DeathDashboard = () => {
   const rowsPerPage = 5;
 
   const tableData = [
-    { hospitalId: "HSP1", time: "2024-12-01 14:35", cause: "Illness", ageGroup: "30-40" },
-    { hospitalId: "HSP2", time: "2024-12-02 09:15", cause: "Accident", ageGroup: "40-50" },
-    { hospitalId: "HSP3", time: "2024-12-03 10:10", cause: "Illness", ageGroup: "50-60" },
-    { hospitalId: "HSP4", time: "2024-12-04 11:45", cause: "Others", ageGroup: "60-70" },
+    { hospitalId: "HSP1", time: "2024-12-01 14:35", cause: "Illness", ageGroup: "Adult" },
+    { hospitalId: "HSP2", time: "2024-12-02 09:15", cause: "Accident", ageGroup: "Adult" },
+    { hospitalId: "HSP3", time: "2024-12-03 10:10", cause: "Illness", ageGroup: "Child" },
+    { hospitalId: "HSP4", time: "2024-12-04 11:45", cause: "Others", ageGroup: "Infant" },
   ];
 
   useEffect(() => {
@@ -68,61 +68,68 @@ const DeathDashboard = () => {
     if (hospital === "HSP1") {
       setMonthlyDeaths([20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75]);
       setAgeGroupDistribution({
-        "30-40": 40,
-        "40-50": 25,
-        "50-60": 15,
-        "60-70": 10,
+        Infant: 15,
+        Child: 25,
+        Adult: 60,
       });
       setCauseDistribution({
         Illness: 50,
         Accident: 30,
         Others: 20,
       });
-      setFilteredData(tableData.filter((data) => data.hospitalId === "HSP1"));
+      setFilteredData(
+        tableData.filter((data) => data.hospitalId === "HSP1")
+      );
     } else if (hospital === "HSP2") {
       setMonthlyDeaths([30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85]);
       setAgeGroupDistribution({
-        "30-40": 30,
-        "40-50": 30,
-        "50-60": 20,
-        "60-70": 20,
+        Infant: 10,
+        Child: 20,
+        Adult: 70,
       });
       setCauseDistribution({
         Illness: 40,
         Accident: 40,
         Others: 20,
       });
-      setFilteredData(tableData.filter((data) => data.hospitalId === "HSP2"));
+      setFilteredData(
+        tableData.filter((data) => data.hospitalId === "HSP2")
+      );
     } else if (hospital === "HSP3") {
       setMonthlyDeaths([25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80]);
       setAgeGroupDistribution({
-        "30-40": 35,
-        "40-50": 25,
-        "50-60": 25,
-        "60-70": 15,
+        Infant: 20,
+        Child: 15,
+        Adult: 65,
       });
       setCauseDistribution({
         Illness: 60,
         Accident: 20,
         Others: 20,
       });
-      setFilteredData(tableData.filter((data) => data.hospitalId === "HSP3"));
+      setFilteredData(
+        tableData.filter((data) => data.hospitalId === "HSP3")
+      );
     } else if (hospital === "HSP4") {
       setMonthlyDeaths([15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70]);
       setAgeGroupDistribution({
-        "30-40": 50,
-        "40-50": 20,
-        "50-60": 15,
-        "60-70": 15,
+        Infant: 5,
+        Child: 10,
+        Adult: 85,
       });
       setCauseDistribution({
         Illness: 70,
         Accident: 15,
         Others: 15,
       });
-      setFilteredData(tableData.filter((data) => data.hospitalId === "HSP4"));
+      setFilteredData(
+        tableData.filter((data) => data.hospitalId === "HSP4")
+      );
     }
   };
+  
+
+
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
   const currentRows = filteredData.slice(
@@ -225,42 +232,8 @@ const DeathDashboard = () => {
       </select>
 
       {isLoading ? (
-     <div className=" text-gray-500 h-screen  flex items-center justify-center">
-     <svg
-       className="pl w-16 h-16 mr-20"
-       viewBox="0 0 128 128"
-       width="128px"
-       height="128px"
-       xmlns="http://www.w3.org/2000/svg"
-     >
-       <defs>
-         <linearGradient id="pl-grad" x1="0" y1="0" x2="0" y2="1">
-           <stop offset="0%" stopColor="hsl(193,90%,55%)"></stop>
-           <stop offset="100%" stopColor="hsl(223,90%,55%)"></stop>
-         </linearGradient>
-       </defs>
-       <circle
-         className="pl__ring"
-         r="56"
-         cx="64"
-         cy="64"
-         fill="none"
-         stroke="hsla(0,10%,10%,0.1)"
-         strokeWidth="16"
-         strokeLinecap="round"
-       ></circle>
-       <path
-         className="pl__worm"
-         d="M92,15.492S78.194,4.967,66.743,16.887c-17.231,17.938-28.26,96.974-28.26,96.974L119.85,59.892l-99-31.588,57.528,89.832L97.8,19.349,13.636,88.51l89.012,16.015S81.908,38.332,66.1,22.337C50.114,6.156,36,15.492,36,15.492a56,56,0,1,0,56,0Z"
-         fill="none"
-         stroke="url(#pl-grad)"
-         strokeWidth="16"
-         strokeLinecap="round"
-         strokeLinejoin="round"
-         strokeDasharray="44 1111"
-         strokeDashoffset="10"
-       ></path>
-     </svg>
+     <div className="flex justify-center items-center h-screen">
+     <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
    </div>
       ) : (
         <>
@@ -274,21 +247,21 @@ const DeathDashboard = () => {
             <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
               <h2 className="text-sm font-semibold text-gray-800 mb-2">Age Group Distribution</h2>
               <div style={{ width: "100%", height: "220px" }}>
-                <Pie
-                  data={pieChartData}
-                  options={{
-                    plugins: {
-                      legend: { position: "bottom" },
-                      tooltip: {
-                        callbacks: {
-                          label: (context) => `${context.label}: ${context.raw}`,
-                        },
+              <Pie
+                data={pieChartData}
+                options={{
+                  plugins: {
+                    legend: { position: "bottom" },
+                    tooltip: {
+                      callbacks: {
+                        label: (context) => `${context.label}: ${context.raw}`,
                       },
                     },
-                    cutout: "60%",
-                    maintainAspectRatio: false,
-                  }}
-                />
+                  },
+                  cutout: "60%",
+                  maintainAspectRatio: false,
+                }}
+              />
               </div>
             </div>
 

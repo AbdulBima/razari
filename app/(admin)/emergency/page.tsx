@@ -52,28 +52,35 @@ const EmergencyDashboard = () => {
     {
       hospitalId: "HSP1",
       time: "2024-12-01 14:35",
-      type: "Heart Attack",
+      type: "Trauma",
       severity: "High",
     },
     {
       hospitalId: "HSP2",
       time: "2024-12-02 09:15",
-      type: "Trauma",
+      type: "Medical",
       severity: "Moderate",
     },
     {
       hospitalId: "HSP3",
       time: "2024-12-03 10:10",
-      type: "Stroke",
+      type: "Surgical",
       severity: "Critical",
     },
     {
       hospitalId: "HSP4",
       time: "2024-12-04 11:45",
-      type: "Infection",
+      type: "Obstetric",
       severity: "Low",
     },
+    {
+      hospitalId: "HSP5",
+      time: "2024-12-05 16:30",
+      type: "Pediatric",
+      severity: "Moderate",
+    },
   ];
+  
 
   useEffect(() => {
     setEmergencyData(tableData);
@@ -92,14 +99,13 @@ const EmergencyDashboard = () => {
 
   const fetchHospitalData = (hospital: string) => {
     if (hospital === "HSP1") {
-      setMonthlyEmergencies([
-        30, 45, 50, 55, 60, 65, 70, 80, 90, 100, 110, 120,
-      ]);
+      setMonthlyEmergencies([30, 45, 50, 55, 60, 65, 70, 80, 90, 100, 110, 120]);
       setEmergencyTypeDistribution({
-        "Heart Attack": 40,
-        Trauma: 30,
-        Stroke: 15,
-        Infection: 15,
+        Trauma: 25,
+        Medical: 20,
+        Surgical: 15,
+        Obstetric: 10,
+        Pediatric: 30,
       });
       setSeverityDistribution({
         High: 35,
@@ -109,14 +115,13 @@ const EmergencyDashboard = () => {
       });
       setFilteredData(tableData.filter((data) => data.hospitalId === "HSP1"));
     } else if (hospital === "HSP2") {
-      setMonthlyEmergencies([
-        20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130,
-      ]);
+      setMonthlyEmergencies([20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130]);
       setEmergencyTypeDistribution({
-        Trauma: 50,
-        "Heart Attack": 30,
-        Stroke: 10,
-        Infection: 10,
+        Trauma: 40,
+        Medical: 15,
+        Surgical: 20,
+        Obstetric: 15,
+        Pediatric: 10,
       });
       setSeverityDistribution({
         High: 25,
@@ -126,7 +131,6 @@ const EmergencyDashboard = () => {
       });
       setFilteredData(tableData.filter((data) => data.hospitalId === "HSP2"));
     }
-    // Add more hospital data as needed
   };
 
   const totalPages = Math.ceil(filteredData.length / rowsPerPage);
@@ -173,10 +177,12 @@ const EmergencyDashboard = () => {
     datasets: [
       {
         data: Object.values(emergencyTypeDistribution),
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0", "#9966FF"],
       },
     ],
   };
+  
+  
 
   const barChartData = {
     labels: Object.keys(severityDistribution),
@@ -241,43 +247,9 @@ const EmergencyDashboard = () => {
       </select>
 
       {isLoading ? (
-        <div className=" text-gray-500 h-screen  flex items-center justify-center">
-          <svg
-            className="pl w-16 h-16 mr-20"
-            viewBox="0 0 128 128"
-            width="128px"
-            height="128px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <defs>
-              <linearGradient id="pl-grad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="hsl(193,90%,55%)"></stop>
-                <stop offset="100%" stopColor="hsl(223,90%,55%)"></stop>
-              </linearGradient>
-            </defs>
-            <circle
-              className="pl__ring"
-              r="56"
-              cx="64"
-              cy="64"
-              fill="none"
-              stroke="hsla(0,10%,10%,0.1)"
-              strokeWidth="16"
-              strokeLinecap="round"
-            ></circle>
-            <path
-              className="pl__worm"
-              d="M92,15.492S78.194,4.967,66.743,16.887c-17.231,17.938-28.26,96.974-28.26,96.974L119.85,59.892l-99-31.588,57.528,89.832L97.8,19.349,13.636,88.51l89.012,16.015S81.908,38.332,66.1,22.337C50.114,6.156,36,15.492,36,15.492a56,56,0,1,0,56,0Z"
-              fill="none"
-              stroke="url(#pl-grad)"
-              strokeWidth="16"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray="44 1111"
-              strokeDashoffset="10"
-            ></path>
-          </svg>
-        </div>
+        <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+      </div>
       ) : (
         <>
           {/* Chart Components */}

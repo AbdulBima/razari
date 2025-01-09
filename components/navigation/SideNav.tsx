@@ -204,7 +204,13 @@ const SideNavbar = () => {
               strokeWidth="2"
               d="M4 18a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"
             />
-            <circle cx="12" cy="7" r="3" stroke="currentColor" strokeWidth="2" />
+            <circle
+              cx="12"
+              cy="7"
+              r="3"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
           </g>
         </svg>
       ),
@@ -259,10 +265,27 @@ const SideNavbar = () => {
         </svg>
       ),
     },
+    {
+      href: "/billing",
+      label: "Billing",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            fill="currentColor"
+            d="M7 15h3a1 1 0 0 0 0-2H7a1 1 0 0 0 0 2M19 5H5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V8a3 3 0 0 0-3-3m1 12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6h16Zm0-8H4V8a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1Z"
+          />
+        </svg>
+      ),
+    },
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-full h-screen px-4 py-8 overflow-y-hidden bg-[#356966] border-r rounded-r-[50px]">
+    <aside className="poppins-regular hidden md:flex flex-col w-full h-screen px-4 py-8 overflow-y-hidden bg-[#356966] border-r rounded-r-[50px]">
       <div>
         <Link href="/dashboard">
           <div className="flex justify-center items-center mb-12">
@@ -283,24 +306,48 @@ const SideNavbar = () => {
         </Link>
       </div>
 
-      <div className="flex flex-col space-y-4 justify-between flex-1 mt-2">
-        <nav className="space-y-3">
+      <div className="flex flex-col space-y-2 justify-between flex-1 ">
+        <nav className="space-y-1">
           {navItems.map(({ href, label, icon }) => (
             <Link href={href} key={href} className="w-full">
               <div
                 onClick={() => handleLinkClick(href)}
-                className={`flex w-full items-center px-3 py-2 mt-2 text-sm font-medium rounded-xl transition-colors duration-300 ${
+                className={`flex w-full items-center px-3 py-1 mt-1.5 text-sm font-medium rounded-xl transition-colors duration-300 ${
                   activeLink === href
                     ? "bg-white text-gray-900"
                     : "text-white hover:bg-gray-100 hover:text-gray-900"
                 }`}
               >
                 {icon}
-                <span className="ml-2">{label}</span>
+                <span className="ml-2 text-sm">{label}</span>
               </div>
             </Link>
           ))}
         </nav>
+      </div>
+
+      <div className="flex  mt-8  mb-6">
+        <button
+          className="flex items-center p-2 text-sm font-normal text-white rounded-lg hover:bg-[#ff8552]"
+          onClick={() => console.log("Logout clicked")}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="white"
+              d="M12 3.25a.75.75 0 0 1 0 1.5a7.25 7.25 0 0 0 0 14.5a.75.75 0 0 1 0 1.5a8.75 8.75 0 1 1 0-17.5"
+            />
+            <path
+              fill="white"
+              d="M16.47 9.53a.75.75 0 0 1 1.06-1.06l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H10a.75.75 0 0 1 0-1.5h8.19z"
+            />
+          </svg>
+          <span className="ml-4 text-sm">Logout</span>
+        </button>
       </div>
     </aside>
   );
