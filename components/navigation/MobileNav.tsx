@@ -1,22 +1,58 @@
 "use client";
 
-import React, { useState } from "react";
-import { FaBell, FaCog } from "react-icons/fa"; // Importing icons
+import React, { useState, useEffect } from "react";
+import { FaCog, FaUserAlt } from "react-icons/fa"; // Importing icons
+import Link from "next/link"; // Importing Link for navigation
+import { usePathname } from "next/navigation"; // Importing usePathname to get current path
+import { motion } from "framer-motion"; // Importing Framer Motion for animations
 
 const MobileNavbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname(); // Get the current pathname
+  const [activeLink, setActiveLink] = useState("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // Add state for the menu visibility
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  // Set the active link to the current pathname on component mount
+  useEffect(() => {
+    setActiveLink(pathname);
+  }, [pathname]);
+
+  // Handle menu link click (to update the active link)
+  const handleLinkClick = (link: string) => {
+    setActiveLink(link);
+    setIsMenuOpen(false); // Close the menu when a link is clicked
   };
+
+  const navItems = [
+    { href: "/dashboard", label: "Dashboard", icon:   <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 48 48"
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="4"
+        d="M6 17v22m36-14v14M26 15h12m-27 7h6M6 28h36M6 34h36M32 9v12"
+      />
+    </svg> },
+    { href: "/admissions", label: "Admissions", icon: <FaUserAlt className="text-white" /> },
+    { href: "/settings", label: "Settings", icon: <FaCog className="text-white" /> },
+    // Add more nav items with their respective icons
+  ];
 
   return (
     <header className="w-full bg-[#356966] h-14 shadow-md px-4 py-2 md:hidden flex items-center justify-between fixed top-0 z-50">
       {/* Burger Icon */}
-      <button
-        onClick={toggleMenu}
+      <motion.button
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
         className="text-gray-800 text-2xl focus:outline-none"
         aria-label="Menu"
+        initial={{ rotate: 0 }}
+        animate={{ rotate: isMenuOpen ? 180 : 0 }}
+        transition={{ duration: 0.3 }}
       >
         {isMenuOpen ? (
           <svg
@@ -54,7 +90,7 @@ const MobileNavbar = () => {
             />
           </svg>
         )}
-      </button>
+      </motion.button>
 
       {/* Logo Section */}
       <div className="absolute left-1/2 transform -translate-x-1/2 flex flex-row items-center">
@@ -75,13 +111,40 @@ const MobileNavbar = () => {
 
       {/* Notification & Settings */}
       <div className="flex items-center space-x-4">
-        <button aria-label="Notifications">
-          <FaBell className="text-white text-lg" />
-        </button>
+       
         <button aria-label="Settings">
           <FaCog className="text-white text-lg" />
         </button>
       </div>
+
+      {/* Mobile Menu */}
+      <motion.div
+        className="fixed top-14 left-0 w-4/5 h-full border-t-4 border-double border-r-4 border-[#ff8552] bg-[#356966] z-50"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isMenuOpen ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="flex flex-col p-4 mt-6 space-y-2">
+          {navItems.map(({ href, label, icon }) => (
+            <Link href={href} key={href}>
+              <motion.div
+                onClick={() => handleLinkClick(href)}
+                className={`flex w-40 items-center px-2 py-2 text-lg rounded-xl transition-colors duration-300 ${
+                  activeLink === href
+                    ? "bg-white text-gray-900"
+                    : "text-white hover:bg-gray-100 hover:text-gray-900"
+                }`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: isMenuOpen ? 1 : 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                {icon}
+                <span className="ml-2">{label}</span>
+              </motion.div>
+            </Link>
+          ))}
+        </div>
+      </motion.div>
     </header>
   );
 };

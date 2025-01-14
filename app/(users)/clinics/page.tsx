@@ -45,6 +45,10 @@ const fetchHospitals = (): Promise<Hospital[]> =>
     }, 1000); // Simulate a 1-second delay
   });
 
+  
+
+
+
 // Country and state data (simulated for demonstration)
 const countries = [
   { code: "NG", name: "Nigeria", states: ["Lagos", "Abuja", "Kaduna", "Kano"] },
