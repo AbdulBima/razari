@@ -18,14 +18,14 @@ export default function RootLayout({
     <html lang="en">
       <body className="poppins-regular">
         <MobileNavbar />
-        <div className="pt-16 flex md:pt-0 w-full h-screen overflow-x-hidden">
+        <div className="pt-16 flex md:pt-0 w-full h-screen ">
           {/* Fixed Sidebar */}
-          <div className="hidden bg-transparent overflow-y-hidden border-none md:flex w-[15vw] h-full fixed">
+          <div className="hidden bg-transparent border-none md:flex w-[15vw] h-full fixed">
             <SideNavbar />
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex  flex-1 w-full flex-col ml-0 md:ml-[15vw] md:overflow-hidden h-full">
+          <div className="flex md:overflow-hidden flex-1 w-full flex-col ml-0 md:ml-[15vw]  h-full">
             <DashboardNavbar />
             <div className="poppins-regular md:pt-16 pb-5">{children}</div> {/* Add padding top to avoid overlap with fixed navbar */}
           </div>

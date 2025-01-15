@@ -191,11 +191,11 @@ const Billing = () => {
           </p>
         </div>
       </div>
-      <div className="poppins-regular md:hidden flex flex-col md:flex-row w-full py-10 px-8">
+      <div className="poppins-regular md:hidden flex flex-col md:flex-row w-full pb-4 px-8">
       <Breadcrumb secondLink = {{href: "/billing",label: "Billing" }} />
 
         {/* Sidebar Section (on mobile, above the table) */}
-        <div className="w-full md:w-1/3 bg-orange-700 rounded-3xl shadow-lg text-white p-6 mb-6 md:mb-0">
+        <div className="w-full md:w-1/3 bg-orange-700 mt-3  rounded-3xl shadow-lg text-white p-6 mb-6 md:mb-0">
           <h2 className="text-xl font-bold mb-4">Current Active Plan</h2>
           <div className="mb-6">
             <p className="text-lg">Plan: {planData?.planName}</p>

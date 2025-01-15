@@ -309,7 +309,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="md:px-8 py-4 px-6 bg-gray-100 h-full w-full overflow-hidden overscroll-y-none">
+    <div className="md:px-8 py-2 px-6 bg-gray-100 h-full w-full  md:overflow-hidden overscroll-none">
      <Breadcrumb secondLink = {{href: "/dashboard",label: "Dashboard" }} />
 
   {/* Top Overview Cards */}

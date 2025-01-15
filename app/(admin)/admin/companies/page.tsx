@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
 
 type Company = {
   companyName: string;
@@ -18,9 +17,9 @@ type Company = {
   dateAdded: string;
 };
 
-const mockCompanies: Company[] = [
+const mocks: Company[] = [
   {
-    companyName: "TechCorp",
+    companyName: "TechCmorp",
     companyEmail: "contact@techcorp.com",
     companyPassword: "password123",
     answer1: "Blue",
@@ -52,8 +51,8 @@ const mockCompanies: Company[] = [
 
 const ITEMS_PER_PAGE = 5;
 
-const CompanyTable: React.FC = () => {
-  const [companies, setCompanies] = useState(mockCompanies);
+const CompanyTable = () => {
+  const [companies, setCompanies] = useState(mocks);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortField, setSortField] = useState<keyof Company>("dateAdded");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -62,7 +61,6 @@ const CompanyTable: React.FC = () => {
 
   const totalPages = Math.ceil(companies.length / ITEMS_PER_PAGE);
 
-  // Calculate the total active companies
   const totalActiveCompanies = companies.filter((company) => company.active).length;
 
   const handlePageChange = (direction: "prev" | "next") => {
@@ -105,14 +103,6 @@ const CompanyTable: React.FC = () => {
     setShowModal(true);
   };
 
-  const getSortIcon = (field: keyof Company) => {
-    if (sortField !== field) return <FaSort className="inline ml-1 text-xs" />;
-    return sortOrder === "asc" ? (
-      <FaSortUp className="inline ml-1 text-xs" />
-    ) : (
-      <FaSortDown className="inline ml-1 text-xs" />
-    );
-  };
 
   return (
     <div className="p-6 poppins-regular bg-gray-50 min-h-screen">
@@ -123,46 +113,36 @@ const CompanyTable: React.FC = () => {
         <strong>Total Active Companies: </strong>{totalActiveCompanies}
       </div>
 
+      {/* Sorting Select Dropdown */}
+      <div className="mb-4 flex items-center space-x-2">
+        <label htmlFor="sortBy" className="text-sm text-gray-600">
+          Sort by:
+        </label>
+        <select
+          id="sortBy"
+          value={sortField}
+          onChange={(e) => handleSort(e.target.value as keyof Company)}
+          className="p-2 border bg-transparent focus:bg-transparent focus:border-0  active:bg-transparent border-gray-300 rounded-md appearance-none"
+        >
+          <option value="companyName">Name</option>
+          <option value="companyEmail">Email</option>
+          <option value="cac">CAC</option>
+          <option value="phone">Phone</option>
+          <option value="dateAdded">Date Added</option>
+        </select>
+       
+      </div>
+
       <div className="overflow-x-auto">
-        <table className="min-w-full mt-4 bg-white shadow-md rounded-lg table-auto border-collapse text-sm">
+        <table className="min-w-full mt-4 bg-white shadow-md rounded-lg  text-sm">
           <thead>
             <tr className="bg-[#356966] text-white text-left">
-              <th
-                className="p-2 cursor-pointer whitespace-nowrap"
-                onClick={() => handleSort("companyName")}
-              >
-                Name {getSortIcon("companyName")}
-              </th>
-              <th
-                className="p-2 cursor-pointer"
-                onClick={() => handleSort("companyEmail")}
-              >
-                Email {getSortIcon("companyEmail")}
-              </th>
-              <th
-                className="p-2 cursor-pointer"
-                onClick={() => handleSort("cac")}
-              >
-                CAC {getSortIcon("cac")}
-              </th>
-              <th
-                className="p-2 cursor-pointer"
-                onClick={() => handleSort("phone")}
-              >
-                Phone {getSortIcon("phone")}
-              </th>
-              <th
-                className="p-2 cursor-pointer whitespace-nowrap"
-                onClick={() => handleSort("active")}
-              >
-                Active {getSortIcon("active")}
-              </th>
-              <th
-                className="p-2 cursor-pointer whitespace-nowrap"
-                onClick={() => handleSort("dateAdded")}
-              >
-                Date Added {getSortIcon("dateAdded")}
-              </th>
+              <th className="p-2">Name</th>
+              <th className="p-2">Email</th>
+              <th className="p-2">CAC</th>
+              <th className="p-2">Phone</th>
+              <th className="p-2">Active</th>
+              <th className="p-2">Date Added</th>
               <th className="p-2 whitespace-nowrap">Actions</th>
             </tr>
           </thead>
@@ -175,7 +155,6 @@ const CompanyTable: React.FC = () => {
                 <td className="px-2 py-2 whitespace-nowrap">{company.companyName}</td>
                 <td className="px-2 py-2">{company.companyEmail}</td>
                 <td className="px-2 py-2">{company.cac}</td>
-
                 <td className="px-2 py-2">{company.phone}</td>
                 <td className="px-2 py-2">
                   {company.active ? "Active" : "Inactive"}
