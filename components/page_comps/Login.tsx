@@ -1,23 +1,51 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Staff");
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async () => {
     setIsLoading(true); // Show loader
     try {
-      const response = await axios.post("https://mockapi.example.com/login", {
-        email,
-        password,
-      });
+      // Determine endpoint based on role
+      const endpoint =
+        role === "Company"
+          ? "http://127.0.0.1:8000/api/company/login"
+          : "http://127.0.0.1:8000/api/staff/login";
+
+      // Make API call
+      const response = await axios.post(endpoint, { email, password });
+
+      const { accessToken, ...additionalData } = response.data;
       console.log("Login successful:", response.data);
-      // Handle successful login, e.g., redirect or save token
+
+      // Store token and data in localStorage
+      if (role === "Company") {
+        // Store company-specific data in localStorage
+        const { companyID, companyName } = additionalData;
+        localStorage.setItem("cpm", accessToken);
+        localStorage.setItem("cmpx", companyID);
+        localStorage.setItem("cmpxn", companyName);
+        router.push("/cmpx/dashboard");
+      } else if (role === "Staff") {
+        // Store staff-specific data in localStorage
+        const { staffId, clinicId, companyId, email, role } = additionalData;
+        localStorage.setItem("stf", accessToken);
+        localStorage.setItem("sttx", staffId);
+        localStorage.setItem("sttxci", clinicId);
+        localStorage.setItem("sttxcm", companyId);
+        localStorage.setItem("sttxe", email);
+        localStorage.setItem("sttxr", role);
+        router.push("/sttx/dashboard");
+      }
     } catch (error) {
       console.error("Error logging in:", error);
       // Handle error, e.g., show a toast notification
@@ -66,9 +94,31 @@ const LoginPage = () => {
 
         {/* Login Form */}
         <div>
+          {/* Role Selection */}
+          <div className="mb-4 relative">
+            <label
+              htmlFor="role"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Login as: 
+            </label>
+            <select
+              id="role"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#356966]"
+            >
+              <option value="Company">Company</option>
+              <option value="Staff">Staff</option>
+            </select>
+          </div>
+
           {/* Email Input */}
           <div className="mb-4 relative">
-            <label htmlFor="email" className="sr-only">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Email
             </label>
             <div className="flex items-center border rounded-lg overflow-hidden">
@@ -100,7 +150,10 @@ const LoginPage = () => {
 
           {/* Password Input */}
           <div className="mb-4 relative">
-            <label htmlFor="password" className="sr-only">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Password
             </label>
             <div className="flex items-center border rounded-lg overflow-hidden">
@@ -142,15 +195,13 @@ const LoginPage = () => {
           </div>
         </div>
 
-          {/* Remember Me and Forgot Password */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center">
-             
-            </div>
-            <button className="text-sm text-[#356966] hover:underline">
-              Forgot password?
-            </button>
-          </div>
+        {/* Remember Me and Forgot Password */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center"></div>
+          <button className="text-sm text-[#356966] hover:underline">
+            Forgot password?
+          </button>
+        </div>
 
         {/* Login Button */}
         <button
