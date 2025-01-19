@@ -1,16 +1,26 @@
 "use client";
 
-import Link from "next/link";
 import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Modal from "../PopAlert";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Staff");
   const [isLoading, setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalType, setModalType] = useState<"success" | "error">("success");
+
   const router = useRouter();
+
+  const showModal = (message: string, type: "success" | "error") => {
+    setModalMessage(message);
+    setModalType(type);
+    setModalVisible(true);
+  };
 
   const handleLogin = async () => {
     setIsLoading(true); // Show loader
@@ -27,16 +37,17 @@ const LoginPage = () => {
       const { accessToken, ...additionalData } = response.data;
       console.log("Login successful:", response.data);
 
+      // Show success modal
+      showModal("Login successful!", "success");
+
       // Store token and data in localStorage
       if (role === "Company") {
-        // Store company-specific data in localStorage
         const { companyID, companyName } = additionalData;
         localStorage.setItem("cpm", accessToken);
         localStorage.setItem("cmpx", companyID);
         localStorage.setItem("cmpxn", companyName);
         router.push("/cmpx/dashboard");
       } else if (role === "Staff") {
-        // Store staff-specific data in localStorage
         const { staffId, clinicId, companyId, email, role } = additionalData;
         localStorage.setItem("stf", accessToken);
         localStorage.setItem("sttx", staffId);
@@ -44,16 +55,17 @@ const LoginPage = () => {
         localStorage.setItem("sttxcm", companyId);
         localStorage.setItem("sttxe", email);
         localStorage.setItem("sttxr", role);
-        router.push("/sttx/dashboard");
+        router.push("/sttx/addrecord");
       }
     } catch (error) {
-      console.error("Error logging in:", error);
-      // Handle error, e.g., show a toast notification
+      console.log("Error logging in:", error);
+
+      // Show error modal
+      showModal("Login failed. Please check your credentials.", "error");
     } finally {
       setIsLoading(false); // Hide loader
     }
   };
-
   return (
     <div className="flex w-full h-[100vh] overflow-hidden">
       {/* Left Section: Image */}
@@ -89,7 +101,7 @@ const LoginPage = () => {
 
         {/* Welcome Text */}
         <p className="text-gray-500 mb-6">
-          Enter your email and password to log in
+          Enter your email and password
         </p>
 
         {/* Login Form */}
@@ -100,7 +112,7 @@ const LoginPage = () => {
               htmlFor="role"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Login as: 
+              Login as:
             </label>
             <select
               id="role"
@@ -206,19 +218,28 @@ const LoginPage = () => {
         {/* Login Button */}
         <button
           onClick={handleLogin}
-          className="w-full py-3 shadow-lg bg-[#356966] text-white rounded-full hover:bg-[#f9d957] transition mb-4"
+          className={`w-full py-3  flex items-center justify-center rounded-full transition mb-4 ${
+            isLoading
+              ? " text-black cursor-not-allowed" // White background, black text, and disabled cursor
+              : "bg-[#356966] shadow-lg text-white hover:bg-[#ff8552]" // Default styling
+          }`}
+          disabled={isLoading} // Disable the button while loading
         >
-          {isLoading ? <div className="loader"></div> : "Login"}
+          {isLoading ? (
+            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+          ) : (
+            "Login"
+          )}
         </button>
-
-        {/* Sign Up Link */}
-        <p className="text-center py-4 text-sm text-gray-600">
-          Not signed up?{" "}
-          <Link href={"/signup"} className="text-[#ff8552] underline">
-            Please sign up here
-          </Link>
-        </p>
       </div>
+      {/* Conditionally render the Modal */}
+      {modalVisible && (
+        <Modal
+          message={modalMessage}
+          type={modalType}
+          onClose={() => setModalVisible(false)} // Close the modal
+        />
+      )}
     </div>
   );
 };

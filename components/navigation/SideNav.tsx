@@ -19,7 +19,7 @@ const SideNavbar = () => {
 
   const navItems = [
     {
-      href: "/dashboard",
+      href: "/cmpx/dashboard",
       label: "Dashboard",
       icon: (
         <svg
@@ -46,7 +46,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/admission",
+      href: "/cmpx/admission",
       label: "Admissions",
       icon: (
         <svg
@@ -67,7 +67,7 @@ const SideNavbar = () => {
       ),
     },
     {
-      href: "/diagnosis",
+      href: "/cmpx/diagnosis",
       label: "Diagnosis",
       icon: (
         <svg
@@ -91,7 +91,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/emergency",
+      href: "/cmpx/emergency",
       label: "Emergency",
       icon: (
         <svg
@@ -109,7 +109,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/birth",
+      href: "/cmpx/birth",
       label: "Birth",
       icon: (
         <svg
@@ -127,7 +127,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/death",
+      href: "/cmpx/death",
       label: "Death",
       icon: (
         <svg
@@ -146,7 +146,7 @@ const SideNavbar = () => {
       ),
     },
     {
-      href: "/staffs",
+      href: "/cmpx/staffs",
       label: "Staff",
       icon: (
         <svg
@@ -163,7 +163,7 @@ const SideNavbar = () => {
       ),
     },
     {
-      href: "/clinics",
+      href: "/cmpx/clinics",
       label: "Clinics",
       icon: (
         <svg
@@ -183,7 +183,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/profile",
+      href: "/cmpx/profile",
       label: "Profile",
       icon: (
         <svg
@@ -217,7 +217,7 @@ const SideNavbar = () => {
     },
 
     {
-      href: "/addrecord",
+      href: "/cmpx/addrecord",
       label: "Add Record",
       icon: (
         <svg
@@ -247,7 +247,7 @@ const SideNavbar = () => {
     },
     
     {
-      href: "/billing",
+      href: "/cmpx/billing",
       label: "Billing",
       icon: (
         <svg
@@ -268,7 +268,7 @@ const SideNavbar = () => {
   return (
     <aside className="poppins-regular hidden md:flex flex-col w-full h-screen px-4 py-8 overflow-y-hidden bg-[#356966] border-r rounded-r-[50px]">
       <div>
-        <Link href="/dashboard">
+        <Link href="/cmpx/dashboard">
           <div className="flex justify-center items-center mb-12">
             <h2 className="zen text-2xl text-white font-bold">Razari</h2>
             <svg
@@ -310,7 +310,13 @@ const SideNavbar = () => {
       <div className="flex  mt-8  mb-6">
         <button
           className="flex items-center p-2 text-sm font-normal text-white rounded-lg hover:bg-[#ff8552]"
-          onClick={() => console.log("Logout clicked")}
+          onClick={() => {
+            localStorage.removeItem("cmpx");
+            localStorage.removeItem("cmpxn");
+            localStorage.removeItem("cpm");
+            window.location.href = "/";
+          }}
+          
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

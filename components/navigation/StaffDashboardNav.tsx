@@ -3,14 +3,15 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const DashboardNavbar = () => {
-  const [userName, setUserName] = useState("");
+const StaffDashboardNavbar = () => {
+  const [email, setEmail] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    const storedData = localStorage.getItem("cmpxn");
+    // Get the key from localStorage
+    const storedData = localStorage.getItem("sttxe");
     if (storedData) {
-      setUserName(storedData || "Company");
+      setEmail(storedData);
     } else {
       router.push("/");
     }
@@ -29,19 +30,16 @@ const DashboardNavbar = () => {
       <div className="flex items-center space-x-6">
        
 
-        {/* Settings Icon */}
-        
-
         {/* User Profile */}
         <div className="flex items-center space-x-2">
           <div className="w-8 h-8 bg-[#356966] text-white flex items-center justify-center rounded-full text-sm font-bold">
-            {userName ? userName.charAt(0).toUpperCase() : "?"}
+            {email ? email.charAt(0).toUpperCase() : "?"}
           </div>
-          <span className="text-gray-600 text-sm font-medium">{userName}</span>
+          <span className="text-gray-600 text-sm font-medium">{email}</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default DashboardNavbar;
+export default StaffDashboardNavbar;

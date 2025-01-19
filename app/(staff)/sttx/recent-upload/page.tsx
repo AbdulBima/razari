@@ -128,7 +128,7 @@ const RecentDataPage: React.FC = () => {
   };
 
   return (
-    <div className="oppins-regular bg-white shadow-md flex flex-col lg:flex-row md:px-40 px-10 mt-6  gap-6 w-full">
+    <div className="oppins-regular bg-white shadow-md flex h-full overflow-y-auto flex-col lg:flex-row md:px-40 px-10 mt-6  gap-6 w-full">
         <Breadcrumb secondLink = {{href: "/recent-upload",label: "Recent Upload" }} />
 
      
