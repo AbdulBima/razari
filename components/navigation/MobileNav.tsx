@@ -49,7 +49,27 @@ const MobileNavbar = () => {
         </svg>
       ),
     },
-
+    {
+      href: "/cmpx/insights",
+      label: "Insights",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 32 32"
+        >
+          <path
+            fill="currentColor"
+            d="M20 16c-.092 0-.18.021-.27.027l-.892-2.674A2.98 2.98 0 0 0 20 11c0-1.654-1.346-3-3-3s-3 1.346-3 3c0 .38.078.741.208 1.076l-2.722 2.333A2.97 2.97 0 0 0 10 14c-1.654 0-3 1.346-3 3s1.346 3 3 3a2.99 2.99 0 0 0 2.412-1.232l3.603 1.08c-.002.052-.015.1-.015.152c0 2.206 1.794 4 4 4s4-1.794 4-4s-1.794-4-4-4m-3-6c.551 0 1 .449 1 1s-.449 1-1 1s-1-.449-1-1s.449-1 1-1m-7 8c-.551 0-1-.449-1-1s.449-1 1-1s1 .449 1 1s-.449 1-1 1m2.985-1.148a3 3 0 0 0-.193-.928l2.722-2.333a2.96 2.96 0 0 0 1.43.403l.885 2.656a4 4 0 0 0-1.236 1.284zM20 22c-1.103 0-2-.897-2-2s.897-2 2-2s2 .898 2 2s-.897 2-2 2"
+          />
+          <path
+            fill="currentColor"
+            d="M27.496 9.864L16 3.158L7.504 8.114L6.496 6.386l9-5.25a1 1 0 0 1 1.008 0l12 7zm-10.992 21l-1.008-1.728L27 22.426V12h2v11a1 1 0 0 1-.496.864zm-4.008-1.75l-9-5.25A1 1 0 0 1 3 23V9h2v13.426l8.504 4.96z"
+          />
+        </svg>
+      ),
+    },
     {
       href: "/cmpx/admission",
       label: "Admissions",
@@ -270,8 +290,6 @@ const MobileNavbar = () => {
     },
   ];
 
- 
-
   return (
     <header className="w-full bg-[#356966] h-12 shadow-md px-4 py-1 md:hidden flex items-center justify-between fixed top-0 z-50">
       {/* Burger Icon */}
@@ -375,33 +393,33 @@ const MobileNavbar = () => {
           </div>
 
           <div className="flex mt-3 ml-4 mb-6">
-        <button
-          className="flex items-center p-2 text-sm font-normal text-white rounded-lg hover:bg-[#ff8552]"
-          onClick={() => {
-            localStorage.removeItem("cmpx");
-            localStorage.removeItem("cmpxn");
-            localStorage.removeItem("cpm");
-            window.location.href = "/";
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              fill="white"
-              d="M12 3.25a.75.75 0 0 1 0 1.5a7.25 7.25 0 0 0 0 14.5a.75.75 0 0 1 0 1.5a8.75 8.75 0 1 1 0-17.5"
-            />
-            <path
-              fill="white"
-              d="M16.47 9.53a.75.75 0 0 1 1.06-1.06l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H10a.75.75 0 0 1 0-1.5h8.19z"
-            />
-          </svg>
-          <span className="ml-4 text-lg">Logout</span>
-        </button>
-      </div>
+            <button
+              className="flex items-center p-2 text-sm font-normal text-white rounded-lg hover:bg-[#ff8552]"
+              onClick={() => {
+                localStorage.removeItem("cmpx");
+                localStorage.removeItem("cmpxn");
+                localStorage.removeItem("cpm");
+                window.location.href = "/";
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="white"
+                  d="M12 3.25a.75.75 0 0 1 0 1.5a7.25 7.25 0 0 0 0 14.5a.75.75 0 0 1 0 1.5a8.75 8.75 0 1 1 0-17.5"
+                />
+                <path
+                  fill="white"
+                  d="M16.47 9.53a.75.75 0 0 1 1.06-1.06l3 3a.75.75 0 0 1 0 1.06l-3 3a.75.75 0 1 1-1.06-1.06l1.72-1.72H10a.75.75 0 0 1 0-1.5h8.19z"
+                />
+              </svg>
+              <span className="ml-4 text-lg">Logout</span>
+            </button>
+          </div>
         </motion.div>
       )}
     </header>

@@ -42,9 +42,9 @@ const LoginPage = () => {
 
       // Store token and data in localStorage
       if (role === "Company") {
-        const { companyID, companyName } = additionalData;
+        const { companyId, companyName } = additionalData;
         localStorage.setItem("cpm", accessToken);
-        localStorage.setItem("cmpx", companyID);
+        localStorage.setItem("cmpx", companyId);
         localStorage.setItem("cmpxn", companyName);
         router.push("/cmpx/dashboard");
       } else if (role === "Staff") {

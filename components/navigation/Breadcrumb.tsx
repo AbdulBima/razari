@@ -7,7 +7,7 @@ interface SecondLink {
 
 const Breadcrumb = ({ secondLink }: { secondLink: SecondLink }) => {
   return (
-    <div className="md:hidden flex text-sm items-center opacity-30 py-2 md:mb-2 overflow-x-auto whitespace-nowrap">
+    <div className="md:hidden flex text-sm items-center opacity-30  md:mb-2 overflow-x-auto whitespace-nowrap">
       {/* Fixed Home Link */}
       <Link href="/" className="text-gray-900">
         <svg
