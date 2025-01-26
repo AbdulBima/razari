@@ -49,7 +49,7 @@ const SideNavbar = () => {
           {companySideNavItems.map((item) => {
             const isActive = pathname.includes(item.href); // Check if pathname includes href
             return (
-              <li key={item.href} className={`mb-1`}>
+              <li key={item.href} className={`mb-3`}>
                 <Link
                   href={item.href}
                   className={`flex items-center px-6 py-1 text-sm font-medium transition-colors duration-200 transform rounded-lg ${

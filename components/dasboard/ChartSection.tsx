@@ -102,7 +102,7 @@ const ChartSection = () => {
   }, [companyId]);
 
   if (!chartData) {
-    return <div>Loading chart...</div>;
+    return <div></div>;
   }
 
   return (

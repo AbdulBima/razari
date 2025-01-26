@@ -3,27 +3,29 @@
 import React, { useState } from "react";
 import ClinicsTab from "@/components/insightsPageComps/ClinicsTab";
 import tabs from "@/utils/insightsTabs";
+import GAdmissionTab from "@/components/insightsPageComps/GAdmissionTab";
+import Breadcrumb from "@/components/navigation/Breadcrumb";
+
 
 const InsightsPage = () => {
   const [activeTab, setActiveTab] = useState("clinics");
-
-
 
   const renderActiveTab = () => {
     switch (activeTab) {
       case "clinics":
         return <ClinicsTab />;
       case "admissions":
-        return <div>General Admissions content goes here.</div>;
+        return <GAdmissionTab />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="poppins-regular px-10 pt-6">
+    <div className="poppins-regular px-10 pt-2">
+ <Breadcrumb secondLink={{ href: "/cmpx/insights", label: "Insights" }} />
       {/* Mobile Dropdown */}
-      <div className="sm:hidden">
+      <div className="sm:hidden mt-4">
         <select
           className="w-full border text-xs border-gray-300 rounded-md p-2 text-gray-700"
           value={activeTab}

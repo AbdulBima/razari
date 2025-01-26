@@ -7,21 +7,22 @@ import Breadcrumb from "@/components/navigation/Breadcrumb";
 
 import Loader from "@/utils/loader";
 import RecommendationModal from "@/components/RecommendationModal";
-import EmergencyCharts from "@/components/dataCharts/EmergencyCharts";
+import EmergencyCharts from "@/components/insightPageCharts/EmergencyCharts";
 
 interface Emergency {
   time: string;
   type: string;
   severity: string;
-  responderId: string;
-  locationId: string;
+  submitterId: string; // This is the field in the response, instead of responderId
+  clinicId: string;
+  companyId: string;
 }
 
 const EmergencyInsight = () => {
   const params = useParams();
   const clinicId = Array.isArray(params.clinicId)
-  ? params.clinicId[0]
-  : params.clinicId || "defaultClinicId";
+    ? params.clinicId[0]
+    : params.clinicId || "defaultClinicId";
 
   const [incidents, setIncidents] = useState<Emergency[]>([]);
   const [loading, setLoading] = useState(false);
@@ -48,10 +49,10 @@ const EmergencyInsight = () => {
   };
 
   useEffect(() => {
-      if (clinicId) {
-        fetchIncidents();
-      }
-    }, [clinicId, currentPage]);
+    if (clinicId) {
+      fetchIncidents();
+    }
+  }, [clinicId, currentPage]);
 
   // Sorting functionality
   const handleSort = (column: keyof Emergency) => {
@@ -108,13 +109,13 @@ const EmergencyInsight = () => {
                 </button>
                 <button
                   className="p-2 text-xs bg-gray-200 rounded"
-                  onClick={() => handleSort("responderId")}
+                  onClick={() => handleSort("submitterId")}
                 >
-                  Responder {sortColumn === "responderId" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Responder {sortColumn === "submitterId" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
               </div>
               <div>
-              <RecommendationModal route="birth" clinicId={clinicId} companyId="394974ea" />
+                <RecommendationModal route="birth" clinicId={clinicId} companyId="394974ea" />
               </div>
             </div>
 
@@ -126,7 +127,7 @@ const EmergencyInsight = () => {
                     <th className="border border-gray-300 p-1 text-xs text-center">Time</th>
                     <th className="border border-gray-300 p-1 text-xs text-center">Type</th>
                     <th className="border border-gray-300 p-1 text-xs text-center">Severity</th>
-                    <th className="border border-gray-300 p-1 text-xs text-center">Responder</th>
+                    <th className="border border-gray-300 p-1 text-xs text-center">Submitter</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -142,7 +143,7 @@ const EmergencyInsight = () => {
                         {incident.severity}
                       </td>
                       <td className="border border-gray-300 p-1 text-center text-xs">
-                        {incident.responderId}
+                        {incident.submitterId}
                       </td>
                     </tr>
                   ))}

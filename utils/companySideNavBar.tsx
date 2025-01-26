@@ -51,25 +51,6 @@ const companySideNavItems = [
     
 
     {
-      href: "/cmpx/death",
-      label: "Death",
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            fill="currentColor"
-            fillRule="evenodd"
-            d="M21 12a9 9 0 1 1-18 0a9 9 0 0 1 18 0m-4.101 5A6.98 6.98 0 0 1 12 19a6.98 6.98 0 0 1-4.899-2zm1.427-2a7 7 0 1 0-12.653 0z"
-            clipRule="evenodd"
-          />
-        </svg>
-      ),
-    },
-    {
       href: "/cmpx/staffs",
       label: "Staff",
       icon: (

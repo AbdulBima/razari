@@ -7,7 +7,7 @@ import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
-import DiagnosisCharts from "@/components/dataCharts/DiagnosisCharts";
+import DiagnosisCharts from "@/components/insightPageCharts/DiagnosisCharts";
 
 interface Diagnosis {
   time: string;

@@ -4,15 +4,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
-import { Category, DiagnosisRecord } from "@/types/types";
+import { Category } from "@/types/types";
 import DashboardOverview from "@/components/dasboard/DashboardOverview";
 import ChartSection from "@/components/dasboard/ChartSection";
 import DiagnosisTable from "@/components/dasboard/DiagnosisTable";
+import Loader from "@/utils/loader";
 
 const Dashboard = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [diagnosisData, setDiagnosisData] = useState<DiagnosisRecord[]>([]);
-  const itemsPerPage = 5;
+ 
   const [loading, setLoading] = useState<boolean>(false);
   const [categoryTotals, setCategoryTotals] = useState<
     Record<Category, number>
@@ -65,11 +64,7 @@ const Dashboard = () => {
           Emergency: emergenciesRes.data.totalEmergencies,
         });
 
-        // Fetch diagnosis table data
-        const diagnosisTableData = await axios.get(
-          `http://127.0.0.1:8000/api/diagnosis/company/${companyId}`
-        );
-        setDiagnosisData(diagnosisTableData.data);
+      
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -80,9 +75,7 @@ const Dashboard = () => {
     fetchData();
   }, []);
 
-  const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage);
-  };
+ 
 
   return (
     <div className="px-6 py-4">
@@ -90,15 +83,10 @@ const Dashboard = () => {
       <DashboardOverview categoryTotals={categoryTotals} />
       <ChartSection />
       {loading ? (
-        <div className="h-[100vh] w-[100vw] flex items-center justify-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
-        </div>
+       <Loader />
       ) : (
         <DiagnosisTable
-          diagnosisData={diagnosisData}
-          currentPage={currentPage}
-          itemsPerPage={itemsPerPage}
-          onPageChange={handlePageChange}
+    
         />
       )}
     </div>

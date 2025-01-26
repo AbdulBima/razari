@@ -6,7 +6,7 @@ import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
-import BirthCharts from "@/components/dataCharts/BirthCharts";
+import BirthCharts from "@/components/insightPageCharts/BirthCharts";
 
 interface Birth {
   time: string;

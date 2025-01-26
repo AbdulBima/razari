@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
-import AdmissionCharts from "@/components/dataCharts/AdmissionCharts";
+import AdmissionCharts from "@/components/insightPageCharts/AdmissionCharts";
 
 import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
@@ -49,6 +49,7 @@ const AdmissionPage = () => {
     if (clinicId) {
       fetchAdmissions();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clinicId, currentPage]);
 
   const handleSort = (column: keyof Admission) => {
@@ -80,7 +81,7 @@ const AdmissionPage = () => {
       <AdmissionCharts clinicId={clinicId} />
 
       {loading ? (
-        <Loader />
+        <div className="mt-6"><Loader /></div>
       ) : (
         <div className="bg-white grid grid-cols-4 gap-4 shadow-md p-2 mt-6 rounded-lg border border-gray-200">
           <div className="col-span-4">

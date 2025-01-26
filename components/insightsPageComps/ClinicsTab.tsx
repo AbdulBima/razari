@@ -5,7 +5,6 @@ import axios from "axios";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
-import Breadcrumb from "@/components/navigation/Breadcrumb";
 
 interface Clinic {
   id: string;
@@ -76,7 +75,7 @@ const ClinicsTab = () => {
 
   return (
     <div className="poppins-regular   w-full  h-screen overflow-y-hidden">
-      <Breadcrumb secondLink={{ href: "/cmpx/insights", label: "Insights" }} />
+     
 
       {loading ? (
         <div className="flex justify-center items-center h-screen">
