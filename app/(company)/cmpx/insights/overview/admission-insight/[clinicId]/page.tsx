@@ -3,10 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
-import Link from "next/link";
-import AdmissionCharts from "@/components/admisioncharts/AdmissionCharts";
+import AdmissionCharts from "@/components/dataCharts/AdmissionCharts";
 
 import RecommendationModal from "@/components/RecommendationModal";
+import Loader from "@/utils/loader";
 
 interface Admission {
   time: string;
@@ -75,12 +75,12 @@ const AdmissionPage = () => {
 
   const totalPages = Math.ceil(totalAdmissions / rowsPerPage); // Use totalAdmissions
   return (
-    <div className="poppins-regular px-4 md:px-8 md:pt-2 w-full bg-gray-50 h-screen md:overscroll-y-none md:overflow-y-hidden">
+    <div className="poppins-regular px-8 md:pt-2 w-full bg-gray-50 h-full md:overscroll-y-none md:overflow-y-hidden">
       <Breadcrumb secondLink={{ href: "/admission", label: "Admissions" }} />
       <AdmissionCharts clinicId={clinicId} />
 
       {loading ? (
-        <div>Loading admissions...</div>
+        <Loader />
       ) : (
         <div className="bg-white grid grid-cols-4 gap-4 shadow-md p-2 mt-6 rounded-lg border border-gray-200">
           <div className="col-span-4">
@@ -137,9 +137,9 @@ const AdmissionPage = () => {
             </div>
 
             {/* Dropdown for sorting on mobile devices */}
-            <div className="block lg:hidden mb-4">
+            <div className="block md:hidden mb-4">
               <select
-                className="p-2 text-xs mb-4 bg-gray-200 rounded w-full"
+                className="p-2 text-xs mb-4 bg-gray-100 rounded w-full"
                 onChange={(e) => handleSort(e.target.value as keyof Admission)}
                 value={sortColumn || ""}
               >
@@ -159,6 +159,7 @@ const AdmissionPage = () => {
             </div>
 
             {/* Table */}
+            <div className="overflow-x-auto">
             <table className="w-full table-auto border-collapse border border-gray-300">
               <thead>
                 <tr className="bg-[#356966] text-white">
@@ -169,8 +170,8 @@ const AdmissionPage = () => {
                     Gender
                   </th>
                   <th className="border border-gray-300 p-1 text-xs text-center">
-                    Age Group
-                  </th>
+                    Age
+                                      </th>
                   <th className="border border-gray-300 p-1 text-xs text-center">
                     Reason
                   </th>
@@ -191,7 +192,7 @@ const AdmissionPage = () => {
                     <td className="border border-gray-300 p-1 text-center text-xs">
                       {admission.ageGroup}
                     </td>
-                    <td className="border border-gray-300 p-1 text-center text-xs">
+                    <td className="whitespace-nowrap border border-gray-300 p-1 text-center text-xs">
                       {admission.reason}
                     </td>
                     <td className="border border-gray-300 p-1 text-center text-xs">
@@ -201,10 +202,11 @@ const AdmissionPage = () => {
                 ))}
               </tbody>
             </table>
+            </div>
 
             {/* Pagination */}
             {/* Pagination */}
-            <div className="flex justify-between items-center mt-2">
+            <div className="flex justify-between items-center mt-4">
               <div className="text-xs">
                 Page {currentPage} of {totalPages}
               </div>

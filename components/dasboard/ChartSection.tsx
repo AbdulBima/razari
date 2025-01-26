@@ -107,7 +107,7 @@ const ChartSection = () => {
 
   return (
     <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 lg:col-span-4">
-      <h2 className="text-sm font-semibold text-gray-800 mb-2">Trends Over Time</h2>
+      <h2 className="text-sm font-semibold text-gray-800 mb-2">Current Year Trend</h2>
       <div style={{ height: "200px" }}>
         <Line
           data={chartData}

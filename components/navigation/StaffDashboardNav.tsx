@@ -13,7 +13,7 @@ const StaffDashboardNavbar = () => {
     if (storedData) {
       setEmail(storedData);
     } else {
-      router.push("/");
+      setEmail("Staff");
     }
   }, [router]);
 

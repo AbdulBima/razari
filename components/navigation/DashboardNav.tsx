@@ -10,9 +10,9 @@ const DashboardNavbar = () => {
   useEffect(() => {
     const storedData = localStorage.getItem("cmpxn");
     if (storedData) {
-      setUserName(storedData || "Company");
+      setUserName(storedData);
     } else {
-      router.push("/");
+      setUserName("Company");
     }
   }, [router]);
 
@@ -27,10 +27,7 @@ const DashboardNavbar = () => {
 
       {/* Right-side icons and user profile */}
       <div className="flex items-center space-x-6">
-       
-
         {/* Settings Icon */}
-        
 
         {/* User Profile */}
         <div className="flex items-center space-x-2">

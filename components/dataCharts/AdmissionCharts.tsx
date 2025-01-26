@@ -50,12 +50,11 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
     null
   );
 
-  const router = useRouter()// Get dynamic route parameters
-  
+  const router = useRouter(); // Get dynamic route parameters
+
   useEffect(() => {
     if (!clinicId) return;
 
-  
     const fetchLineChartData = async () => {
       try {
         const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/months-count`;
@@ -125,7 +124,6 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
       }
     };
 
-
     fetchLineChartData();
     fetchPieChartData();
     fetchBarChartData();
@@ -167,29 +165,41 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
     <div className="mt-2 poppins-regular flex flex-col w-full gap-6 mb-2">
       {/* Display clinic information */}
       {clinicDetails && (
-     
-     <div className="flex items-center  ">
-     <button
-       className="px-3 text-sm py-2 border bg-white text-gray-700 rounded-full hover:bg-gray-300"
-       onClick={() => router.back()} // Navigate to the previous page
-     >
-       &larr; Back
-     </button>
-   
-     <div className="flex ml-3 uppercase font-bols text-gray-700">
-       <p className="text-lg ">
-        {clinicDetails.clinicName} - {clinicDetails.country} - {clinicDetails.state}
-       </p>
-     
-     </div>
-   </div>
-   
+        <div className="flex items-center mt-3  md:mt-0 ">
+          <button
+            className="px-3 text-sm py-2 border bg-white text-gray-700 rounded-full hover:bg-gray-300"
+            onClick={() => router.back()} // Navigate to the previous page
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 1024 1024"
+            >
+              <path
+                fill="#6a6969"
+                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64"
+              />
+              <path
+                fill="#6a6969"
+                d="m237.248 512l265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312z"
+              />
+            </svg>
+          </button>
+
+          <div className="flex ml-3 uppercase font-bols text-gray-700">
+            <p className="md:text-lg text-sm">
+              {clinicDetails.clinicName} - {clinicDetails.country} -{" "}
+              {clinicDetails.state}
+            </p>
+          </div>
+        </div>
       )}
 
       <div className="flex flex-col lg:flex-row justify-between gap-6">
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-          <h2 className="text-sm font-semibold text-gray-800 mb-2">
-            Diagnoses Per Month
+          <h2 className="text-sm  text-center font-semibold text-gray-800 mb-2">
+            Admissions Per Month
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {lineChartData && (
@@ -199,8 +209,8 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
         </div>
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-          <h2 className="text-sm font-semibold text-gray-800 mb-2">
-            Diagnosis Type Distribution
+          <h2 className="text-sm text-center font-semibold text-gray-800 mb-3">
+            Admission Type Distribution
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {pieChartData && (
@@ -210,7 +220,7 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
         </div>
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-          <h2 className="text-sm font-semibold text-gray-800 mb-2">
+          <h2 className="text-sm text-center font-semibold text-gray-800 mb-2">
             Gender Distribution
           </h2>
           <div style={{ width: "100%", height: "200px" }}>

@@ -21,6 +21,7 @@ const RecommendationModal: React.FC<RecommendationModalProps> = ({
     "operations" | "patient" | "health" | "finance" | null
   >(null); // Selected type
   const [loading, setLoading] = useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [apiResponse, setApiResponse] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,14 +66,14 @@ const RecommendationModal: React.FC<RecommendationModalProps> = ({
       {/* Header */}
       <h2
         onClick={openTypeSelector}
-        className="text-sm underline cursor-pointer underline-offset-2  text-gray-600 font-bold"
+        className="text-sm underline cursor-pointer underline-offset-2  text-gray-600 md:font-bold"
       >
         Clinic Recommendations
       </h2>
 
       {/* Type Selector Modal */}
       {isTypeSelectorOpen && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed px-6 md:px-0 inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
             <h3 className="text-lg font-semibold mb-4">
               Select Recommendation Type
@@ -102,7 +103,7 @@ const RecommendationModal: React.FC<RecommendationModalProps> = ({
 
       {/* API Response Modal */}
       {selectedType && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed px-6 inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg w-96">
             <h2 className="text-2xl font-semibold">{selectedType}</h2>
             
