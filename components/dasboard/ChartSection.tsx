@@ -26,7 +26,7 @@ const ChartSection = () => {
         console.log("Company ID not found in local storage.");
         return;
       }
-
+  
       try {
         // Fetching the data from the provided API endpoints
         const [
@@ -34,20 +34,36 @@ const ChartSection = () => {
           emergencyRes,
           deathRes,
           birthRes,
-          admissionRes
+          admissionRes,
         ] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/api/diagnosis/company/${companyId}/months-count`),
-          axios.get(`http://127.0.0.1:8000/api/emergencies/company/${companyId}/months-count`),
-          axios.get(`http://127.0.0.1:8000/api/death-records/company/${companyId}/months-count`),
-          axios.get(`http://127.0.0.1:8000/api/birth-records/company/${companyId}/months-count`),
-          axios.get(`http://127.0.0.1:8000/api/admissions/company/${companyId}/months-count`),
+          axios.get(
+            `http://127.0.0.1:8000/api/diagnosis/company/${companyId}/months-count`
+          ),
+          axios.get(
+            `http://127.0.0.1:8000/api/emergencies/company/${companyId}/months-count`
+          ),
+          axios.get(
+            `http://127.0.0.1:8000/api/death-records/company/${companyId}/months-count`
+          ),
+          axios.get(
+            `http://127.0.0.1:8000/api/birth-records/company/${companyId}/months-count`
+          ),
+          axios.get(
+            `http://127.0.0.1:8000/api/admissions/company/${companyId}/months-count`
+          ),
         ]);
-
+  
         // Extracting month data from responses
         const months = Object.keys(diagnosisRes.data.diagnosis_monthsCount);
-
+  
+        // Map full month names or numbers to abbreviations
+        const abbreviatedMonths = months.map((month) => {
+          const date = new Date(`${month} 1, 2000`);
+          return date.toLocaleString("default", { month: "short" });
+        });
+  
         const chartData = {
-          labels: months,
+          labels: abbreviatedMonths,
           datasets: [
             {
               label: "Diagnosis",
@@ -91,16 +107,16 @@ const ChartSection = () => {
             },
           ],
         };
-
+  
         setChartData(chartData);
       } catch (error) {
-        console.error("Error fetching chart data:", error);
+        console.logr("Error fetching chart data:", error);
       }
     };
-
+  
     fetchData();
   }, [companyId]);
-
+  
   if (!chartData) {
     return <div></div>;
   }
@@ -108,25 +124,40 @@ const ChartSection = () => {
   return (
     <div className="bg-white shadow-md p-4 rounded-lg border border-gray-200 lg:col-span-4">
       <h2 className="text-sm font-semibold text-gray-800 mb-2">Current Year Trend</h2>
-      <div style={{ height: "200px" }}>
-        <Line
-          data={chartData}
-          options={{
-            maintainAspectRatio: false,
-            scales: {
-              x: {
-                grid: {
-                  drawOnChartArea: false,
-                },
-              },
-              y: {
-                grid: {
-                  drawOnChartArea: false,
-                },
-              },
-            },
-          }}
-        />
+      <div style={{ height: "200px"}}>
+      <Line
+  data={chartData}
+  options={{
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 5, // Increase this value for more space above the chart
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          boxWidth: 15, // Size of the legend box
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
+      y: {
+        grid: {
+          drawOnChartArea: false,
+        },
+      },
+    },
+  }}
+/>
+
       </div>
     </div>
   );

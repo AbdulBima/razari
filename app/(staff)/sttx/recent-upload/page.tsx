@@ -112,7 +112,7 @@ const RecentDataPage: React.FC = () => {
 
         setTotalPages(1); // We have 1 page of mock data for simplicity
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.logr("Error fetching data:", error);
       }
     };
 

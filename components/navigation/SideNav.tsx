@@ -19,10 +19,8 @@ const SideNavbar = () => {
     setActiveLink(link);
   };
 
-
-
   return (
-    <aside className="poppins-regular hidden md:flex flex-col w-full h-screen px-4 py-8 overflow-y-hidden bg-[#356966] border-r rounded-r-[50px]">
+    <aside className="poppins-regular  hidden md:flex flex-col w-full h-screen px-4 py-8 overflow-y-hidden bg-[#356966] border-r rounded-r-[50px]">
       <div>
         <Link href="/cmpx/dashboard">
           <div className="flex justify-center items-center mb-12">
@@ -45,26 +43,26 @@ const SideNavbar = () => {
 
       <div className="flex flex-col space-y-2 justify-between flex-1 ">
         <nav className="">
-        <ul className="flex flex-col">
-          {companySideNavItems.map((item) => {
-            const isActive = pathname.includes(item.href); // Check if pathname includes href
-            return (
-              <li key={item.href} className={`mb-3`}>
-                <Link
-                  href={item.href}
-                  className={`flex items-center px-6 py-1 text-sm font-medium transition-colors duration-200 transform rounded-lg ${
-                    isActive
-                      ? "bg-gray-100 text-[#356966]"
-                      : "text-white hover:bg-gray-100 hover:text-[#356966]"
-                  }`}
-                >
-                  {item.icon}
-                  <span className="mx-4">{item.label}</span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+          <ul className="flex flex-col">
+            {companySideNavItems.map((item) => {
+              const isActive = pathname.includes(item.href); // Check if pathname includes href
+              return (
+                <li key={item.href} className={`mb-3`}>
+                  <Link
+                    href={item.href}
+                    className={`flex items-center px-6 py-1 text-sm font-medium transition-colors duration-200 transform rounded-lg ${
+                      isActive
+                        ? "bg-gray-100 text-[#356966]"
+                        : "text-white hover:bg-gray-100 hover:text-[#356966]"
+                    }`}
+                  >
+                    {item.icon}
+                    <span className="mx-4">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </nav>
       </div>
 

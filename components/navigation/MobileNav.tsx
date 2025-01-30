@@ -111,7 +111,7 @@ const MobileNavbar = () => {
               <Link href={href} key={href}>
                 <motion.div
                   onClick={() => handleLinkClick(href)}
-                  className={`flex w-40 items-center px-2 py-3 text-lg rounded-lg transition-colors duration-300 ${
+                  className={`flex w-44 items-center px-2 py-2 text-lg rounded-lg transition-colors duration-300 ${
                     activeLink === href
                       ? "bg-white text-gray-900"
                       : "text-white hover:bg-gray-100 hover:text-gray-900"
@@ -127,7 +127,7 @@ const MobileNavbar = () => {
             ))}
           </div>
 
-          <div className="flex mt-3 ml-4 mb-6">
+          <div className="flex mt-44 ml-4 ">
             <button
               className="flex items-center p-2 text-sm font-normal text-white rounded-lg hover:bg-[#ff8552]"
               onClick={() => {

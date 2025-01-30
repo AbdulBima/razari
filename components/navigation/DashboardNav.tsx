@@ -17,7 +17,7 @@ const DashboardNavbar = () => {
   }, [router]);
 
   return (
-    <div className="bg-white py-6 border-b border-opacity-30 px-6 h-16 hidden md:flex items-center justify-between ml-[15vw] fixed top-0 left-0 right-0 z-50">
+    <div className="bg-gray-50 py-6 border-b border-opacity-50 px-6 h-16 hidden md:flex items-center justify-between ml-[15vw] fixed top-0 left-0 right-0 z-40">
       {/* Welcome Message */}
       <div className="flex items-center space-x-3">
         <div className="relative">

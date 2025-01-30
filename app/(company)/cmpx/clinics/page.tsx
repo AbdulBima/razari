@@ -1,414 +1,354 @@
 "use client";
 
-import Breadcrumb from "@/components/navigation/Breadcrumb";
 import React, { useState, useEffect } from "react";
-import { FaSort } from "react-icons/fa";
+import axios from "axios";
+import Breadcrumb from "@/components/navigation/Breadcrumb";
+import Modal from "@/components/PopAlert";
+import ConfirmationModal from "@/utils/ConfirmationModal";
 
-// Simulating an API call to fetch hospitals
-const fetchHospitals = (): Promise<Hospital[]> =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          hospitalId: "HSP001",
-          name: "Lagos General Hospital",
-          country: "NG",
-          state: "Lagos",
-          active: true,
-        },
-        {
-          id: 2,
-          hospitalId: "HSP002",
-          name: "Accra Specialist Clinic",
-          country: "GH",
-          state: "Greater Accra",
-          active: false
-        },
-        {
-          id: 3,
-          hospitalId: "HSP003",
-          name: "Cape Town Medical Center",
-          country: "ZA",
-          state: "Western Cape",
-          active: false
-        },
-        {
-          id: 4,
-          hospitalId: "HSP004",
-          name: "Nairobi Regional Hospital",
-          country: "KE",
-          state: "Nairobi",
-          active: false
-        },
-      ]);
-    }, 1000); // Simulate a 1-second delay
-  });
-
-  
-
-
-
-// Country and state data (simulated for demonstration)
-const countries = [
-  { code: "NG", name: "Nigeria", states: ["Lagos", "Abuja", "Kaduna", "Kano"] },
-  {
-    code: "GH",
-    name: "Ghana",
-    states: ["Greater Accra", "Ashanti", "Western"],
-  },
-  {
-    code: "ZA",
-    name: "South Africa",
-    states: ["Western Cape", "KwaZulu-Natal", "Gauteng"],
-  },
-  { code: "KE", name: "Kenya", states: ["Nairobi", "Mombasa", "Kisumu"] },
+const states = [
+  "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
+  "Borno", "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", 
+  "Gombe", "Imo", "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", 
+  "Kwara", "Lagos", "Nasarawa", "Niger", "Ogun", "Ondo", "Osun", "Oyo", 
+  "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara", "FCT"
 ];
 
 type Hospital = {
   id: number;
-  hospitalId: string;
+  clinicId: string;
   name: string;
   country: string;
   state: string;
-  active: boolean;
+  status: boolean;
 };
 
 const HospitalManagement = () => {
   const [hospitalList, setHospitalList] = useState<Hospital[]>([]);
+  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
+  const [confirmationModalVisible, setConfirmationModalVisible] = useState(false);
+  const [selectedHospitalId, setSelectedHospitalId] = useState<string | null>(null);
+  const [modalType, setModalType] = useState<"success" | "error">("success");
   const [newHospital, setNewHospital] = useState<Partial<Hospital>>({
-    hospitalId: "",
+    clinicId: "",
     name: "",
-    country: "",
+    country: "Nigeria",
     state: "",
-    active: true,
   });
   const [editingHospital, setEditingHospital] = useState<Hospital | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deletingHospital, setDeletingHospital] = useState<Hospital | null>(
-    null
-  );
-  const [loading, setLoading] = useState(false);
-  const rowsPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(hospitalList.length / rowsPerPage);
+  const [sortField, setSortField] = useState("");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const rowsPerPage = 5;
+
+
+  // Handle delete with confirmation
+  const confirmDeleteHospital = (id: string) => {
+    setSelectedHospitalId(id);
+    setConfirmationModalVisible(true);
+  };
+
+  const companyId = localStorage.getItem("cmpx") || "";
 
   useEffect(() => {
+    fetchHospitals(currentPage, rowsPerPage);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, sortField, sortOrder]);
+
+  const fetchHospitals = async (page: number, limit: number) => {
     setLoading(true);
-    fetchHospitals().then((data) => {
-      setHospitalList(data);
-      setLoading(false);
-    });
-  }, []);
-
-  const handleAddOrUpdateHospital = () => {
-    const hospitalId = `HSP${Date.now()}`;
-    setLoading(true);
-
-    if (editingHospital) {
-      setHospitalList((prev) =>
-        prev.map((hospital) =>
-          hospital.id === editingHospital.id
-            ? { ...hospital, ...newHospital }
-            : hospital
-        )
-      );
-    } else {
-      setHospitalList((prev) => [
-        ...prev,
-        { id: Date.now(), hospitalId, ...newHospital, active: true } as Hospital,
-      ]);
-    }
-
-    setLoading(false);
-    setShowModal(false);
-    setNewHospital({ hospitalId: "", name: "", country: "", state: "", active: true });
-    setEditingHospital(null);
-  };
-
-  const handleDeleteHospital = (hospital: Hospital) => {
-    setDeletingHospital(hospital);
-    setShowDeleteModal(true);
-  };
-
-  const confirmDeleteHospital = () => {
-    if (deletingHospital) {
-      setHospitalList((prev) =>
-        prev.filter((hospital) => hospital.id !== deletingHospital.id)
-      );
-      setShowDeleteModal(false);
-      setDeletingHospital(null);
-    }
-  };
-
-  const cancelDelete = () => {
-    setShowDeleteModal(false);
-    setDeletingHospital(null);
-  };
-
-  const handleDeactivateHospital = (hospital: Hospital) => {
-    setHospitalList((prev) =>
-      prev.map((h) =>
-        h.id === hospital.id ? { ...h, active: false } : h
-      )
-    );
-  };
-
-  const handleSort = (key: keyof Hospital) => {
-    setHospitalList((prev) => {
-      const sortedList = [...prev].sort((a, b) => {
-        if (a[key] < b[key]) return -1;
-        if (a[key] > b[key]) return 1;
-        return 0;
+    try {
+      const response = await axios.get(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`, {
+        params: { page, limit, sortField, sortOrder },
+        headers: { "X-Company-Id": companyId },
       });
-      return sortedList;
-    });
+      setHospitalList(response.data);
+    } catch (error) {
+      showNotification("Error fetching hospitals", "error");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const showNotification = (message: string, type: "success" | "error") => {
+    setModalMessage(message);
+    setModalType(type);
+    setModalVisible(true);
+    setTimeout(() => setModalVisible(false), 3000); // Auto-hide after 3 seconds
+  };
+
+  const handleAddOrUpdateHospital = async () => {
+    try {
+      setLoading(true);
+      if (editingHospital) {
+        await axios.put(`http://127.0.0.1:8000/api/clinic/${companyId}/${editingHospital.clinicId}/update`, {
+          name: newHospital.name,
+          country: newHospital.country,
+          state: newHospital.state,
+        });
+        showNotification("Hospital updated successfully", "success");
+      } else {
+        await axios.post(`http://127.0.0.1:8000/api/clinic/${companyId}/create`, {
+          name: newHospital.name,
+          country: newHospital.country,
+          state: newHospital.state,
+        });
+        showNotification("Hospital added successfully", "success");
+      }
+      fetchHospitals(currentPage, rowsPerPage);
+      setShowModal(false);
+      setNewHospital({ clinicId: "", name: "", country: "Nigeria", state: "" });
+      setEditingHospital(null);
+    } catch (error) {
+      showNotification("Error saving hospital", "error");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!selectedHospitalId) return;
+
+    try {
+      setLoading(true);
+      await axios.delete(`http://127.0.0.1:8000/api/clinic/${companyId}/delete/${selectedHospitalId}`);
+      fetchHospitals(currentPage, rowsPerPage);
+      showNotification("Hospital deleted successfully", "success");
+    } catch (error) {
+      showNotification("Error deleting hospital", "error");
+      console.log(error);
+    } finally {
+      setLoading(false);
+      setConfirmationModalVisible(false);
+      setSelectedHospitalId(null);
+    }
+  };
+
+  const handleToggleHospitalStatus = async (id: string, isActive: boolean) => {
+    try {
+      setLoading(true);
+      const endpoint = isActive
+        ? `http://127.0.0.1:8000/api/clinic/${companyId}/${id}/deactivate`
+        : `http://127.0.0.1:8000/api/clinic/${companyId}/${id}/activate`;
+  
+      await axios.patch(endpoint);
+      fetchHospitals(currentPage, rowsPerPage);
+      showNotification(
+        `Hospital ${isActive ? "deactivated" : "activated"} successfully`,
+        "success"
+      );
+    } catch (error) {
+      showNotification(`Error ${isActive ? "deactivating" : "activating"} hospital`, "error");
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handlePageChange = (direction: "next" | "prev") => {
     setCurrentPage((prev) =>
-      direction === "next"
-        ? Math.min(prev + 1, totalPages)
-        : Math.max(prev - 1, 1)
+      direction === "next" ? prev + 1 : Math.max(prev - 1, 1)
     );
   };
 
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewHospital({ ...newHospital, country: e.target.value, state: "" });
-  };
-
-  const handleStateChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setNewHospital({ ...newHospital, state: e.target.value });
-  };
-
-  const filteredStates =
-    countries.find((c) => c.code === newHospital.country)?.states || [];
-
-  const currentRows = hospitalList.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
-
   return (
-    <div className="poppins-regular px-6 pt-2 w-full bg-gray-50 h-full overflow-y-hidden">
-      <Breadcrumb secondLink={{ href: "/clinics", label: "Clinic Management" }} />
+    <div className="poppins-regular px-6 md:px-10 pt-2 md:pt-0 w-full bg-gray-50 h-full overflow-y-hidden">
+      <Breadcrumb secondLink={{ href: "/clinics", label: "Hospital(s) Management" }} />
+      {modalVisible && (
+        <Modal
+          message={modalMessage}
+          type={modalType}
+          onClose={() => setModalVisible(false)}
+        />
+      )}
+      <div className="mb-4 flex flex-wrap items-center mt-4 justify-between">
+  <div className="hidden text-gray-500 md:flex items-center space-x-4 ">
 
-      <div className="mb-4 flex justify-between">
-        <button
-          className="bg-[#356966] text-white px-4 py-2 mt-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
-          onClick={() => setShowModal(true)}
-        >
-          Add Clinic
-        </button>
-      </div>
+    <h1> Sort by: </h1>
+    <button
+      className={`px-4 py-1 rounded-lg shadow-sm ${sortField === "name" ? "bg-orange-800 text-white" : "bg-gray-300"}`}
+      onClick={() => {
+        setSortField("name");
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      }}
+    >
+      Name
+    </button>
+    <button
+      className={`px-4 py-1 rounded-lg shadow-sm ${sortField === "state" ? "bg-orange-500 text-white" : "bg-gray-300"}`}
+      onClick={() => {
+        setSortField("state");
+        setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+      }}
+    >
+      State
+    </button>
+  </div>
+  <div className="block md:hidden mb-2">
+    <select
+      className="w-full border border-gray-300 p-2 rounded"
+      onChange={(e) => {
+        const [field, order] = e.target.value.split("-");
+        setSortField(field);
+        setSortOrder(order as "asc" | "desc");
+      }}
+    >
+      <option value="name-asc">Name (Asc)</option>
+      <option value="name-desc">Name (Desc)</option>
+      <option value="state-asc">State (Asc)</option>
+      <option value="state-desc">State (Desc)</option>
+    </select>
+  </div>
+  <div className=" flex justify-end mb-2">
+    <button
+      className="bg-[#356966] text-white px-3 py-1.5 mt-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
+      onClick={() => {
+        setShowModal(true);
+        setNewHospital({ clinicId: "", name: "", country: "Nigeria", state: "" });
+        setEditingHospital(null);
+      }}
+    >
+      Add Clinic
+    </button>
+  </div>
+</div>
+
 
       {loading && (
-        <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
-      </div>
+        <div className="flex justify-center items-center h-96">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+        </div>
       )}
 
-      {/* Only show the table when loading is complete */}
-      {!loading && (
-       <div className="overflow-x-auto">
-       <table className="w-full table-auto text-sm bg-white rounded-lg shadow-sm">
-         <thead>
-           <tr className="bg-[#356966] rounded-lg text-white text-left">
-             <th
-               className="px-4 py-2 hidden text-white md:block cursor-pointer"
-               onClick={() => handleSort("hospitalId")}
-             >
-               Hospital ID <FaSort className="inline ml-2" />
-             </th>
-             <th
-               className="px-4 py-2 cursor-pointer"
-               onClick={() => handleSort("name")}
-             >
-               Name <FaSort className="inline ml-2" />
-             </th>
-             <th
-               className="px-4 hidden md:block py-2 cursor-pointer"
-               onClick={() => handleSort("country")}
-             >
-               Country <FaSort className="inline ml-2" />
-             </th>
-             <th
-               className="px-4 py-2 cursor-pointer"
-               onClick={() => handleSort("state")}
-             >
-               State <FaSort className="inline ml-2" />
-             </th>
-             <th className="px-4 py-2">Actions</th>
-           </tr>
-         </thead>
-         <tbody>
-           {currentRows.map((hospital) => (
-             <tr
-               key={hospital.id}
-               className={`even:bg-gray-50 border-t border-gray-200 hover:bg-gray-50 ${
-                 hospital.active ? "" : "bg-gray-100"
-               }`}
-             >
-               <td className="px-4 py-2 hidden md:block">{hospital.hospitalId}</td>
-               <td className="px-4 py-2">{hospital.name}</td>
-               <td className="px-4 py-2 hidden md:block">{hospital.country}</td>
-               <td className="px-4 py-2">{hospital.state}</td>
-               <td className="px-4 py-2 flex space-x-4 text-left">
-                 <button
-                   className="text-[#356966] bg-[#e0f7f3] hover:bg-[#c1d9d2] text-sm py-1 px-2 rounded-xl"
-                   onClick={() => setEditingHospital(hospital)}
-                 >
-                   Edit
-                 </button>
-     
-                 {!hospital.active ? (
-                   <span className="text-gray-500 bg-[#f0f0f0] text-sm py-1 px-2 rounded-xl">
-                     Deactivated
-                   </span>
-                 ) : (
-                   <button
-                     className="text-orange-600 bg-[#ffe6cc] hover:bg-[#ffdb99] text-sm py-1 px-2 rounded-xl"
-                     onClick={() => handleDeactivateHospital(hospital)}
-                   >
-                     Deactivate
-                   </button>
-                 )}
-     
-                 <button
-                   className="text-red-600 bg-[#fce4e4] hover:bg-[#f8d7da] text-sm py-1 px-2 rounded-xl"
-                   onClick={() => handleDeleteHospital(hospital)}
-                 >
-                   Delete
-                 </button>
-               </td>
-             </tr>
-           ))}
-         </tbody>
-       </table>
-     </div>
-     
+       {/* Confirmation Modal */}
+       <ConfirmationModal
+        isVisible={confirmationModalVisible}
+        message="Are you sure you want to delete this hospital? This action cannot be undone."
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setConfirmationModalVisible(false)}
+      />
+
+      {!loading && hospitalList.length > 0 && (
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto text-sm bg-white rounded-lg shadow-sm">
+            <thead>
+              <tr className="bg-[#356966] text-white text-left">
+                <th className="px-3 py-1.5 hidden md:block">Hospital ID</th>
+                <th className="px-3 py-1.5">Name</th>
+                <th className="px-3 py-1.5">State</th>
+                <th className="px-3 py-1.5">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+  {hospitalList.map((hospital) => (
+    <tr key={hospital.id} className="border-t border-gray-200 hover:bg-gray-50 odd:bg-gray-100 even:bg-white">
+      <td className="px-3 py-1.5 hidden uppercase md:block">{hospital.clinicId}</td>
+      <td className="px-3 py-1.5">{hospital.name}</td>
+      <td className="px-3 py-1.5">{hospital.state}</td>
+      <td className="px-3 py-1.5 flex space-x-4">
+        <button
+          className="text-[#356966] bg-[#e0f7f3] text-sm py-1 px-2 rounded-xl"
+          onClick={() => {
+            setEditingHospital(hospital);
+            setNewHospital(hospital);
+            setShowModal(true);
+          }}
+        >
+          Edit
+        </button>
+        <button
+          className={`text-sm py-1 px-2 rounded-xl ${
+            hospital.status ? "text-orange-600 bg-[#ffe6cc]" : "text-green-600 bg-[#e6ffe6]"
+          }`}
+          onClick={() => handleToggleHospitalStatus(hospital.clinicId, hospital.status)}
+        >
+          {hospital.status ? "Deactivate" : "Activate"}
+        </button>
+        <button
+              className="text-red-600 bg-[#fce4e4] text-sm py-1 px-2 rounded-xl"
+              onClick={() => confirmDeleteHospital(hospital.clinicId)}
+            >
+              Delete
+            </button>
+
+
+      </td>
+    </tr>
+  ))}
+</tbody>
+          </table>
+        </div>
       )}
 
-      <div className="flex justify-between items-center mt-6">
+      <div className="flex justify-between text-sm items-center mt-6">
         <span className="text-sm">
-          Page {currentPage} of {totalPages}
+          Page {currentPage}
         </span>
         <div className="flex space-x-4">
           <button
-            className={`px-2 text-sm py-1 rounded-lg ${
-              currentPage === 1
-                ? "bg-gray-300 text-gray-600"
-                : "bg-gray-400 text-white hover:bg-green-700"
-            }`}
+            className={`px-2 py-1 rounded-lg ${currentPage === 1 ? "bg-gray-200" : "bg-gray-300 text-white"}`}
             onClick={() => handlePageChange("prev")}
             disabled={currentPage === 1}
           >
             Previous
           </button>
           <button
-            className={`px-2 py-1 text-sm rounded-lg ${
-              currentPage === totalPages
-                ? "bg-gray-300 text-gray-600"
-                : "bg-[#356966] text-white hover:bg-green-700"
-            }`}
+            className={`px-2 py-1 rounded-lg ${currentPage >= hospitalList.length / rowsPerPage ? "bg-gray-300" : "bg-[#356966] text-white"}`}
             onClick={() => handlePageChange("next")}
-            disabled={currentPage === totalPages}
+            disabled={currentPage >= hospitalList.length / rowsPerPage}
           >
             Next
           </button>
         </div>
       </div>
 
-      {/* Add/Edit Hospital Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-xl w-96 space-y-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6">
+            <h2 className="text-xl font-semibold">
               {editingHospital ? "Edit Hospital" : "Add Hospital"}
             </h2>
-            <div className="mb-6">
-              <label className="block text-sm text-gray-600 mb-2">Hospital Name</label>
+            <div>
+              <label className="block text-sm">Hospital Name</label>
               <input
                 type="text"
                 value={newHospital.name || ""}
-                onChange={(e) =>
-                  setNewHospital({ ...newHospital, name: e.target.value })
-                }
-                className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+                onChange={(e) => setNewHospital({ ...newHospital, name: e.target.value })}
+                className="w-full border border-gray-300 p-2 rounded"
               />
             </div>
-            <div className="mb-6">
-              <label className="block text-sm text-gray-600 mb-2">Country</label>
-              <select
-                value={newHospital.country}
-                onChange={handleCountryChange}
-                className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
-              >
-                <option value="">Select Country</option>
-                {countries.map((country) => (
-                  <option key={country.code} value={country.code}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-6">
-              <label className="block text-sm text-gray-600 mb-2">State</label>
+            <div>
+              <label className="block text-sm">State</label>
               <select
                 value={newHospital.state}
-                onChange={handleStateChange}
-                className="w-full border border-gray-300 p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#356966] focus:border-[#356966] transition duration-300"
+                onChange={(e) => setNewHospital({ ...newHospital, state: e.target.value })}
+                className="w-full border border-gray-300 p-2 rounded"
               >
                 <option value="">Select State</option>
-                {filteredStates.map((state) => (
+                {states.map((state) => (
                   <option key={state} value={state}>
                     {state}
                   </option>
                 ))}
               </select>
             </div>
-            <div className="flex justify-end space-x-6 mt-6">
+            <div className="flex justify-end space-x-4">
               <button
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition duration-200"
+                className="bg-gray-500 text-white px-3 py-1.5 rounded"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
               <button
-                className="bg-[#356966] text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+                className="bg-[#356966] text-white px-3 py-1.5 rounded"
                 onClick={handleAddOrUpdateHospital}
               >
                 {editingHospital ? "Update" : "Add"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-lg shadow-lg w-96 text-sm space-y-4">
-            <h2 className="text-lg font-semibold text-red-600 mb-4">
-              Confirm Deletion
-            </h2>
-            <p className="text-gray-700">
-              Are you sure you want to delete the hospital{" "}
-              <strong>{deletingHospital?.name}</strong>?
-            </p>
-            <div className="flex justify-end space-x-4 mt-6">
-              <button
-                className="bg-gray-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-600 transition duration-200"
-                onClick={cancelDelete}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition duration-200"
-                onClick={confirmDeleteHospital}
-              >
-                Delete
               </button>
             </div>
           </div>

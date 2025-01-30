@@ -16,7 +16,6 @@ import {
 } from "chart.js";
 
 import { ChartData } from "chart.js";
-import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -29,19 +28,14 @@ ChartJS.register(
   BarElement
 );
 
-interface ClinicDetails {
-  clinicName: string;
-  country: string;
-  state: string;
-}
 
-const DeathCharts = ({ clinicId }: { clinicId: string }) => {
-  const [clinicDetails, setClinicDetails] = useState<ClinicDetails | null>(null);
+
+const GDeathTabChart = ({ companyId }: { companyId: string }) => {
   const [lineChartData, setLineChartData] = useState<ChartData<"line"> | null>(null);
   const [pieChartData, setPieChartData] = useState<ChartData<"pie"> | null>(null);
   const [barChartData, setBarChartData] = useState<ChartData<"bar"> | null>(null);
 
-  const router = useRouter();
+
 
   const abbreviateMonths = (monthNames: string[]) => {
     return monthNames.map((month) => {
@@ -51,18 +45,14 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
   };
 
   useEffect(() => {
-    if (!clinicId) return;
+    if (!companyId) return;
 
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/months-count`;
+        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/months-count`;
         const { data } = await axios.get(url);
 
-        setClinicDetails({
-          clinicName: data.clinicName,
-          country: data.country,
-          state: data.state,
-        });
+    
 
         const abbreviatedLabels = abbreviateMonths(Object.keys(data.monthsCount));
 
@@ -85,7 +75,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/demographics`;
+        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/demographics`;
         const { data } = await axios.get(url);
 
         // Adjust pie chart to display demographic distribution (Adult-male, Adult-female, etc.)
@@ -108,7 +98,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/cause-count`;
+        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/cause-count`;
         const { data } = await axios.get(url);
 
         // Adjust bar chart to display cause distribution (accident, illness, others)
@@ -133,7 +123,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
     fetchLineChartData();
     fetchPieChartData();
     fetchBarChartData();
-  }, [clinicId]);
+  }, [companyId]);
 
   const lineChartOptions = {
     maintainAspectRatio: false,
@@ -169,36 +159,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
   return (
     <div className="mt-2 poppins-regular flex flex-col w-full gap-6 mb-2">
-      {clinicDetails && (
-        <div className="flex items-center mt-3 md:mt-0">
-          <button
-            className="px-3 text-sm py-2 border bg-white text-gray-700 rounded-full hover:bg-gray-300"
-            onClick={() => router.back()}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 1024 1024"
-            >
-              <path
-                fill="#6a6969"
-                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64"
-              />
-              <path
-                fill="#6a6969"
-                d="m237.248 512l265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312z"
-              />
-            </svg>
-          </button>
-
-          <div className="flex ml-3 uppercase font-bold text-gray-700">
-            <p className="md:text-lg text-sm">
-              {clinicDetails.clinicName} - {clinicDetails.country} - {clinicDetails.state}
-            </p>
-          </div>
-        </div>
-      )}
+    
 
       <div className="flex flex-col lg:flex-row justify-between gap-6">
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
@@ -229,7 +190,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
         </div>
       </div>
     </div>
-  );
+  ); 
 };
 
-export default DeathCharts;
+export default GDeathTabChart;

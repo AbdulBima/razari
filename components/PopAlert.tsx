@@ -24,8 +24,8 @@ const Modal: React.FC<ModalProps> = ({ message, type, onClose }) => {
         top: "20px",
         left: "50%",
         transform: "translateX(-50%)",
-        backgroundColor: "#ff8552",
-        color: "#fff",
+        backgroundColor: "white",
+        color: "black",
         padding: "10px 20px",
         borderRadius: "50px",
         fontSize: "16px",
@@ -33,6 +33,8 @@ const Modal: React.FC<ModalProps> = ({ message, type, onClose }) => {
         alignItems: "center",
         justifyContent: "center",
         zIndex: 9999,
+        whiteSpace: "nowrap",
+        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
       }}
     >
       {/* Circle with color change */}
@@ -43,6 +45,7 @@ const Modal: React.FC<ModalProps> = ({ message, type, onClose }) => {
           borderRadius: "50%",
           backgroundColor: circleColor, // Dynamic color
           marginRight: "10px",
+          whiteSpace: "nowrap",
         }}
       />
       {message}

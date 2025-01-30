@@ -19,17 +19,16 @@ const GAdmissionTab = () => {
   const [admissions, setAdmissions] = useState<Admission[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5); // State for rows per page
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [rowsPerPage, setRowsPerPage] = useState(7); // State for rows per page
   const [sortColumn, setSortColumn] = useState<keyof Admission | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [totalAdmissions, setTotalAdmissions] = useState(0);
-  const [error, setError] = useState<string | null>(null);
 
   const fetchAdmissions = async () => {
     const companyId = localStorage.getItem("cmpx");
 
     if (!companyId) {
-      setError("Company ID not found in local storage.");
       setLoading(false);
       return;
     }
@@ -43,7 +42,7 @@ const GAdmissionTab = () => {
       setAdmissions(response.data.admissions);
       setTotalAdmissions(response.data.total);
     } catch (error) {
-      console.error("Error fetching admissions:", error);
+      console.logr("Error fetching admissions:", error);
     }
     setLoading(false);
   };
@@ -53,6 +52,7 @@ const GAdmissionTab = () => {
     if (companyId) {
       fetchAdmissions();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, rowsPerPage]); // Re-fetch data when currentPage or rowsPerPage changes
 
   const handleSort = (column: keyof Admission) => {
@@ -75,7 +75,7 @@ const GAdmissionTab = () => {
   const totalPages = Math.ceil(totalAdmissions / rowsPerPage);
 
   return (
-    <div className="poppins-regular md:px-8 md:pt-2 w-full bg-gray-50 h-full md:overscroll-y-none md:overflow-y-hidden">
+    <div className="poppins-regular md:px-2 pt-2 w-full bg-gray-50 h-full md:overscroll-y-none md:overflow-y-hidden">
 
       {localStorage.getItem("cmpx") && (
         <GAdmissionTabChart companyId={localStorage.getItem("cmpx") as string} />

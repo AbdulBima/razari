@@ -5,6 +5,10 @@ import ClinicsTab from "@/components/insightsPageComps/ClinicsTab";
 import tabs from "@/utils/insightsTabs";
 import GAdmissionTab from "@/components/insightsPageComps/GAdmissionTab";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
+import GDDiagnosisTab from "@/components/insightsPageComps/GDiagnosisTab";
+import GBirthTab from "@/components/insightsPageComps/GBirthTab";
+import GEmergencyTab from "@/components/insightsPageComps/GEmergencyTab";
+import GDeathTab from "@/components/insightsPageComps/GDeathTab";
 
 
 const InsightsPage = () => {
@@ -16,6 +20,14 @@ const InsightsPage = () => {
         return <ClinicsTab />;
       case "admissions":
         return <GAdmissionTab />;
+       case "diagnosis":
+        return <GDDiagnosisTab />;
+        case "births":
+        return <GBirthTab />;
+        case "emergency":
+        return <GEmergencyTab />;
+        case "deaths":
+        return <GDeathTab />;
       default:
         return null;
     }

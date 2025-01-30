@@ -16,7 +16,6 @@ import {
 } from "chart.js";
 
 import { ChartData } from "chart.js";
-import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -29,51 +28,32 @@ ChartJS.register(
   BarElement
 );
 
-interface ClinicDetails {
-  clinicName: string;
-  country: string;
-  state: string;
-}
 
-const DeathCharts = ({ clinicId }: { clinicId: string }) => {
-  const [clinicDetails, setClinicDetails] = useState<ClinicDetails | null>(null);
+
+const GBirthTabChart = ({ companyId }: { companyId: string }) => {
   const [lineChartData, setLineChartData] = useState<ChartData<"line"> | null>(null);
   const [pieChartData, setPieChartData] = useState<ChartData<"pie"> | null>(null);
   const [barChartData, setBarChartData] = useState<ChartData<"bar"> | null>(null);
 
-  const router = useRouter();
 
-  const abbreviateMonths = (monthNames: string[]) => {
-    return monthNames.map((month) => {
-      const date = new Date(`${month} 1, 2021`); // Placeholder year
-      return date.toLocaleString("en-US", { month: "short" }); // Abbreviated month
-    });
-  };
 
   useEffect(() => {
-    if (!clinicId) return;
-
+    if (!companyId) return;
+  
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/months-count`;
+        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/months-count`;
         const { data } = await axios.get(url);
-
-        setClinicDetails({
-          clinicName: data.clinicName,
-          country: data.country,
-          state: data.state,
-        });
-
-        const abbreviatedLabels = abbreviateMonths(Object.keys(data.monthsCount));
-
+  
+  
         setLineChartData({
-          labels: abbreviatedLabels,
+          labels: Object.keys(data.monthsCount),
           datasets: [
             {
-              label: "Deaths",
+              label: "Births",
               data: Object.values(data.monthsCount),
-              backgroundColor: "rgba(255, 99, 132, 0.2)",
-              borderColor: "rgba(255, 99, 132, 1)",
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(54, 162, 235, 1)",
               borderWidth: 1,
             },
           ],
@@ -82,22 +62,18 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
         console.logr("Error fetching line chart data:", error);
       }
     };
-
+  
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/demographics`;
+        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/gender-distribution`;
         const { data } = await axios.get(url);
-
-        // Adjust pie chart to display demographic distribution (Adult-male, Adult-female, etc.)
-        const demographicLabels = Object.keys(data.demographicDistribution);
-        const demographicValues = Object.values(data.demographicDistribution) as number[];
-
+  
         setPieChartData({
-          labels: demographicLabels,
+          labels: Object.keys(data.genderDistribution),
           datasets: [
             {
-              data: demographicValues,
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+              data: Object.values(data.genderDistribution),
+              backgroundColor: ["#FF6384", "#36A2EB"],
             },
           ],
         });
@@ -105,23 +81,19 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
         console.logr("Error fetching pie chart data:", error);
       }
     };
-
+  
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/cause-count`;
+        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/mode-distribution`;
         const { data } = await axios.get(url);
-
-        // Adjust bar chart to display cause distribution (accident, illness, others)
-        const causeLabels = Object.keys(data.causeDistribution);
-        const causeValues = Object.values(data.causeDistribution);
-
+  
         setBarChartData({
-          labels: causeLabels,
+          labels: Object.keys(data.modeDistribution),
           datasets: [
             {
-              label: "Cause of Death",
-              data: causeValues as (number | [number, number] | null)[],
-              backgroundColor: ["#4CAF50", "#FFC107", "#FF5722"],
+              label: "Mode of Delivery",
+              data: Object.values(data.modeDistribution),
+              backgroundColor: ["#4CAF50", "#FFC107"],
             },
           ],
         });
@@ -129,12 +101,12 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
         console.logr("Error fetching bar chart data:", error);
       }
     };
-
+  
     fetchLineChartData();
     fetchPieChartData();
     fetchBarChartData();
-  }, [clinicId]);
-
+  }, [companyId]);
+  
   const lineChartOptions = {
     maintainAspectRatio: false,
     scales: {
@@ -169,41 +141,11 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
   return (
     <div className="mt-2 poppins-regular flex flex-col w-full gap-6 mb-2">
-      {clinicDetails && (
-        <div className="flex items-center mt-3 md:mt-0">
-          <button
-            className="px-3 text-sm py-2 border bg-white text-gray-700 rounded-full hover:bg-gray-300"
-            onClick={() => router.back()}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 1024 1024"
-            >
-              <path
-                fill="#6a6969"
-                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64"
-              />
-              <path
-                fill="#6a6969"
-                d="m237.248 512l265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312z"
-              />
-            </svg>
-          </button>
-
-          <div className="flex ml-3 uppercase font-bold text-gray-700">
-            <p className="md:text-lg text-sm">
-              {clinicDetails.clinicName} - {clinicDetails.country} - {clinicDetails.state}
-            </p>
-          </div>
-        </div>
-      )}
-
+    
       <div className="flex flex-col lg:flex-row justify-between gap-6">
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
           <h2 className="text-sm text-center font-semibold text-gray-800 mb-2">
-            Deaths Per Month
+            Births Per Month
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {lineChartData && <Line data={lineChartData} options={lineChartOptions} />}
@@ -212,7 +154,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
           <h2 className="text-sm text-center font-semibold text-gray-800 mb-3">
-            Age-Group Distribution
+            Gender Distribution
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {pieChartData && <Pie data={pieChartData} options={pieChartOptions} />}
@@ -221,7 +163,7 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
           <h2 className="text-sm text-center font-semibold text-gray-800 mb-2">
-            Cause Distribution
+            Mode Distribution
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {barChartData && <Bar data={barChartData} options={barChartOptions} />}
@@ -232,4 +174,4 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
   );
 };
 
-export default DeathCharts;
+export default GBirthTabChart;

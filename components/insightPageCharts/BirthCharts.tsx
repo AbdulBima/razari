@@ -70,7 +70,7 @@ const BirthCharts = ({ clinicId }: { clinicId: string }) => {
           ],
         });
       } catch (error) {
-        console.error("Error fetching line chart data:", error);
+        console.logr("Error fetching line chart data:", error);
       }
     };
   
@@ -89,7 +89,7 @@ const BirthCharts = ({ clinicId }: { clinicId: string }) => {
           ],
         });
       } catch (error) {
-        console.error("Error fetching pie chart data:", error);
+        console.logr("Error fetching pie chart data:", error);
       }
     };
   
@@ -109,7 +109,7 @@ const BirthCharts = ({ clinicId }: { clinicId: string }) => {
           ],
         });
       } catch (error) {
-        console.error("Error fetching bar chart data:", error);
+        console.logr("Error fetching bar chart data:", error);
       }
     };
   

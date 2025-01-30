@@ -9,7 +9,7 @@ type DashboardOverviewProps = {
 
 const DashboardOverview: React.FC<DashboardOverviewProps> = ({ categoryTotals }) => {
   return (
-    <div className="grid grid-cols-2 mt-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+    <div className="grid grid-cols-2  mt-5 md:mt-2 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
       {Object.keys(categoryTotals).map((key, index) => {
         const category = key as Category;
         return (

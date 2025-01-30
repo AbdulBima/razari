@@ -66,7 +66,7 @@ const Dashboard = () => {
 
       
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.logr("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -78,7 +78,7 @@ const Dashboard = () => {
  
 
   return (
-    <div className="px-6 py-4">
+    <div className="px-6 md:py-4">
       <Breadcrumb secondLink={{ href: "/dashboard", label: "Dashboard" }} />
       <DashboardOverview categoryTotals={categoryTotals} />
       <ChartSection />

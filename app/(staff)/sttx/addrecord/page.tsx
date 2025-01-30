@@ -90,7 +90,7 @@ const HospitalDataForm = () => {
       });
       console.log("Form submitted successfully", response.data);
     } catch (error) {
-      console.error("Error submitting form", error);
+      console.logr("Error submitting form", error);
     } finally {
       setLoading(false);
     }

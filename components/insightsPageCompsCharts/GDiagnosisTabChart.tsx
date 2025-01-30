@@ -15,9 +15,7 @@ import {
   BarElement,
 } from "chart.js";
 
-// Chart.js types for datasets
 import { ChartData } from "chart.js";
-import { useRouter } from "next/navigation";
 
 ChartJS.register(
   CategoryScale,
@@ -30,16 +28,7 @@ ChartJS.register(
   BarElement
 );
 
-interface ClinicDetails {
-  clinicName: string;
-  country: string;
-  state: string;
-}
-
-const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
-  const [clinicDetails, setClinicDetails] = useState<ClinicDetails | null>(
-    null
-  );
+const GDiagnosisTabChart = ({ companyId }: { companyId: string }) => {
   const [lineChartData, setLineChartData] = useState<ChartData<"line"> | null>(
     null
   );
@@ -50,49 +39,51 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
     null
   );
 
-  const router = useRouter(); // Get dynamic route parameters
-
   useEffect(() => {
-    if (!clinicId) return;
+    if (!companyId) return;
 
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/months-count`;
+        const url = `http://127.0.0.1:8000/api/diagnosis/${companyId}/all/months-count`;
         const { data } = await axios.get(url);
-
-        setClinicDetails({
-          clinicName: data.clinicName,
-          country: data.country,
-          state: data.state,
-        });
 
         setLineChartData({
           labels: Object.keys(data.monthsCount),
           datasets: [
             {
-              label: "Admissions",
+              label: "Diagnoses",
               data: Object.values(data.monthsCount),
-              backgroundColor: "rgba(75, 192, 192, 0.2)",
-              borderColor: "rgba(75, 192, 192, 1)",
+              backgroundColor: "rgba(54, 162, 235, 0.2)",
+              borderColor: "rgba(54, 162, 235, 1)",
               borderWidth: 1,
             },
           ],
         });
       } catch (error) {
-        console.log("Error fetching line chart data:", error);
+        console.logr("Error fetching line chart data:", error);
       }
     };
 
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/demographics`;
+        const url = `http://127.0.0.1:8000/api/diagnosis/${companyId}/all/disease-distribution`;
         const { data } = await axios.get(url);
+
         setPieChartData({
-          labels: Object.keys(data.demographicDistribution),
+          labels: Object.keys(data.diseaseDistribution),
           datasets: [
             {
-              data: Object.values(data.demographicDistribution),
-              backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56", "#4BC0C0"],
+              data: Object.values(data.diseaseDistribution),
+              backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56",
+                "#4BC0C0",
+                "#FF5733",
+                "#C70039",
+                "#900C3F",
+                "#581845",
+              ],
             },
           ],
         });
@@ -103,31 +94,28 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/gender-demographics`;
+        const url = `http://127.0.0.1:8000/api/diagnosis/${companyId}/all/demographics`;
         const { data } = await axios.get(url);
 
         setBarChartData({
-          labels: ["Male", "Female"],
+          labels: Object.keys(data.demographicDistribution),
           datasets: [
             {
-              label: "Admissions",
-              data: [
-                data.demographicDistribution["Male"],
-                data.demographicDistribution["Female"],
-              ],
-              backgroundColor: ["#4CAF50", "#FF5722"],
+              label: "Demographic Distribution",
+              data: Object.values(data.demographicDistribution),
+              backgroundColor: ["#F44336", "#FFC107", "#4CAF50", "#2196F3"],
             },
           ],
         });
       } catch (error) {
-        console.log("Error fetching bar chart data:", error);
+        console.logr("Error fetching bar chart data:", error);
       }
     };
 
     fetchLineChartData();
     fetchPieChartData();
     fetchBarChartData();
-  }, [clinicId]);
+  }, [companyId]);
 
   const lineChartOptions = {
     maintainAspectRatio: false,
@@ -155,7 +143,7 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
       x: { grid: { display: false } },
       y: {
         grid: { color: "#e0e0e0", lineWidth: 1 },
-        ticks: { stepSize: 5 },
+        ticks: { stepSize: 1 },
       },
     },
     plugins: { legend: { display: false } },
@@ -163,43 +151,10 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
   return (
     <div className="mt-2 poppins-regular flex flex-col w-full gap-6 mb-2">
-      {/* Display clinic information */}
-      {clinicDetails && (
-        <div className="flex items-center mt-3  md:mt-0 ">
-          <button
-            className="px-3 text-sm py-2 border bg-white text-gray-700 rounded-full hover:bg-gray-300"
-            onClick={() => router.back()} // Navigate to the previous page
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 1024 1024"
-            >
-              <path
-                fill="#6a6969"
-                d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64"
-              />
-              <path
-                fill="#6a6969"
-                d="m237.248 512l265.408 265.344a32 32 0 0 1-45.312 45.312l-288-288a32 32 0 0 1 0-45.312l288-288a32 32 0 1 1 45.312 45.312z"
-              />
-            </svg>
-          </button>
-
-          <div className="flex ml-3 uppercase font-bols text-gray-700">
-            <p className="md:text-lg text-sm">
-              {clinicDetails.clinicName} - {clinicDetails.country} -{" "}
-              {clinicDetails.state}
-            </p>
-          </div>
-        </div>
-      )}
-
       <div className="flex flex-col lg:flex-row justify-between gap-6">
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
-          <h2 className="text-sm  text-center font-semibold text-gray-800 mb-2">
-            Admissions Per Month
+          <h2 className="text-sm text-center font-semibold text-gray-800 mb-2">
+            Diagnosis Per Month
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {lineChartData && (
@@ -210,7 +165,7 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
           <h2 className="text-sm text-center font-semibold text-gray-800 mb-3">
-            Admission Type Distribution
+            Diagnosis Categories
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {pieChartData && (
@@ -221,7 +176,7 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
         <div className="bg-white shadow-md p-3 rounded-lg border border-gray-200 flex-1">
           <h2 className="text-sm text-center font-semibold text-gray-800 mb-2">
-            Gender Distribution
+            Demographic Distribution
           </h2>
           <div style={{ width: "100%", height: "200px" }}>
             {barChartData && (
@@ -234,4 +189,4 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
   );
 };
 
-export default AdmissionCharts;
+export default GDiagnosisTabChart;
