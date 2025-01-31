@@ -42,7 +42,7 @@ const GAdmissionTab = () => {
       setAdmissions(response.data.admissions);
       setTotalAdmissions(response.data.total);
     } catch (error) {
-      console.logr("Error fetching admissions:", error);
+      console.log("Error fetching admissions:", error);
     }
     setLoading(false);
   };

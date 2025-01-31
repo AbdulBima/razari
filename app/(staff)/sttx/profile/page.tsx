@@ -1,256 +1,231 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import Breadcrumb from "@/components/navigation/Breadcrumb";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import Modal from "@/components/PopAlert";
+import Loader from "@/utils/loader";
+import Link from "next/link";
 
-// Define types for user data
-type UserProfile = {
-  id: number;
-  name: string;
-  email: string;
-  role: string;
-  organization: string;
-  phone: string;
-};
+const StaffDetails = () => {
+  interface Staff {
+    staffId: string;
+    name: string;
+    email: string;
+    phoneNumber?: string;
+    companyId: string;
+    clinicId: string;
+    status: string;
+    role: string;
+    companyName: string;
+    clinicName: string;
+  }
 
-const Modal: React.FC<{
-  title: string;
-  children: React.ReactNode;
-  onClose: () => void;
-  onConfirm: () => void;
-  confirmText?: string;
-  cancelText?: string;
-}> = ({ title, children, onClose, onConfirm, confirmText = "Confirm", cancelText = "Cancel" }) => (
-  <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-white p-6 rounded-lg shadow-lg w-96 text-sm">
-      <h2 className="text-lg font-bold mb-4">{title}</h2>
-      {children}
-      <div className="flex justify-end mt-4">
-        <button
-          className="bg-gray-500 text-white px-4 py-2 rounded-md mr-2"
-          onClick={onClose}
-        >
-          {cancelText}
-        </button>
-        <button
-          className="bg-green-600 text-white px-4 py-2 rounded-md"
-          onClick={onConfirm}
-        >
-          {confirmText}
-        </button>
-      </div>
-    </div>
-  </div>
-);
+  const [staff, setStaff] = useState<Staff | null>(null);
+  const [passwords, setPasswords] = useState({ current: "", new: "" });
+  const [companyId, setCompanyId] = useState<string | null>(null);
+  const [staffId, setStaffId] = useState<string | null>(null);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] =
+    useState<boolean>(false);
+  const [alert, setAlert] = useState<{
+    message: string;
+    type: "success" | "error";
+  } | null>(null);
 
-const StaffProfileComponent: React.FC = () => {
-  const [user, setUser] = useState<UserProfile>({
-    id: 1,
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    role: "Clinician",
-    organization: "Global Health Network",
-    phone: "+1234567890",
-  });
+  useEffect(() => {
+    const storedCompanyId = localStorage.getItem("sttxcm");
+    const storedStaffId = localStorage.getItem("sttx");
+    setCompanyId(storedCompanyId);
+    setStaffId(storedStaffId);
+  }, []);
 
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
-  const [showChangePhoneModal, setShowChangePhoneModal] = useState(false);
-
-  const [editedUser, setEditedUser] = useState<Partial<UserProfile>>(user);
-  const [passwords, setPasswords] = useState({ oldPassword: "", newPassword: "" });
-  const [newPhoneNumber, setNewPhoneNumber] = useState("");
-
-  const handleSavePassword = () => {
-    if (!passwords.oldPassword || !passwords.newPassword) {
-      alert("Both fields are required.");
-      return;
+  useEffect(() => {
+    if (companyId && staffId) {
+      fetchStaffDetails();
     }
-    alert("Password successfully changed!");
-    setShowChangePasswordModal(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyId, staffId]);
+
+  const fetchStaffDetails = async () => {
+    try {
+      const { data } = await axios.get(
+        `http://127.0.0.1:8000/api/staff/stxi/${companyId}/${staffId}`
+      );
+      setStaff(data);
+    } catch (error) {
+      setAlert({ message: "Error fetching staff details", type: "error" });
+    }
   };
 
-  const handleSavePhone = () => {
-    if (!newPhoneNumber) {
-      alert("New phone number is required.");
-      return;
+  const updatePassword = async () => {
+    try {
+      await axios.put(
+        `http://127.0.0.1:8000/api/staff/upd/${companyId}/${staffId}/update-password`,
+        {
+          currentPassword: passwords.current,
+          newPassword: passwords.new,
+        }
+      );
+      setPasswords({ current: "", new: "" });
+      setIsPasswordModalOpen(false);
+      setAlert({ message: "Password updated successfully", type: "success" });
+    } catch (error) {
+      setAlert({ message: "Error updating password", type: "error" });
     }
-    setUser({ ...user, phone: newPhoneNumber });
-    alert("Phone number successfully updated!");
-    setShowChangePhoneModal(false);
   };
-
-  // Split name into first and last name
-  const [firstName, lastName] = user.name.split(" ");
 
   return (
-    <div className="poppins-regular text-lg  px-10 md:px-20 pt-4 w-full bg-white h-full overflow-y-auto space-y-6">
-   
-         
-         <Breadcrumb secondLink = {{href: "/profle",label: "Profile" }} />
+    <div className="poppins-regular px-6 md:px-20 w-full bg-gray-50 h-screen overscroll-y-none overflow-y-hidden">
+      {alert && (
+        <Modal
+          message={alert.message}
+          type={alert.type}
+          onClose={() => setAlert(null)}
+        />
+      )}
+      <div className="md:hidden flex text-sm items-center opacity-30  mt-2 md:mb-2 overflow-x-auto whitespace-nowrap">
+        {/* Fixed Home Link */}
+        <Link href="/sttx/addrecord" className="text-gray-900">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </Link>
 
-    {/* Profile Card */}
-    <div className="flex flex-col md:flex-row bg-white w-full space-y-6 md:space-y-0 md:space-x-4">
-      <div className="w-full md:w-2/5 rounded-lg shadow-sm border p-6 flex flex-col items-center">
-        <div className="w-24 h-24 rounded-full bg-[#356966] text-[#ff8552] flex items-center justify-center text-3xl font-bold">
-          <h1>
-            {user.name
-              .split(" ")
-              .map((word) => word[0])
-              .join("")
-              .toUpperCase()}
-          </h1>
-        </div>
-        <div className="flex text-center mt-6 flex-col">
-          <h2 className="text-lg font-semibold text-gray-800">{user.name}</h2>
-          <p className="text-gray-600">{user.email}</p>
-        </div>
-      </div>
-  
-      <div className="w-full md:w-3/5 rounded-lg shadow-sm border p-6 flex flex-col space-y-6">
-        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-          <div className="flex flex-col w-full md:w-1/2">
-            <label className="block text-sm font-medium text-gray-700">First Name</label>
-            <input
-              type="text"
-              value={firstName || ""}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none"
-              readOnly
-            />
-          </div>
-          <div className="flex flex-col w-full md:w-1/2">
-            <label className="block text-sm font-medium text-gray-700">Last Name</label>
-            <input
-              type="text"
-              value={lastName || ""}
-              className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none"
-              readOnly
-            />
-          </div>
-        </div>
-  
-        <button
-          className="bg-[#356966] text-sm w-full md:w-44 text-white py-2 px-4 rounded-md hover:bg-green-700"
-          onClick={() => setShowEditModal(true)}
-        >
-          Edit Name
-        </button>
-      </div>
-    </div>
-  
-    {/* Contact Info Card */}
-    <div className="border rounded-lg flex flex-col shadow-sm bg-white p-6 space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
-          <input
-            type="email"
-            value={user.email}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none"
-            readOnly
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Phone</label>
-          <input
-            type="tel"
-            value={user.phone}
-            className="w-full mt-1 p-2 border border-gray-300 rounded-md focus:outline-none"
-            readOnly
-          />
-        </div>
-      </div>
-  
-      {/* Actions */}
-      <div className="space-y-4 md:space-y-0 w-full md:space-x-6 flex flex-col md:flex-row pt-4">
-      <button
-          className="bg-[#356966] text-sm w-full md:w-44 text-white py-2 px-4 rounded-md hover:bg-green-700"
-           onClick={() => setShowChangePasswordModal(true)}
-  >
-    Change Password
-  </button>
-  <button
-          className="bg-[#356966] text-sm w-full md:w-44 text-white py-2 px-4 rounded-md hover:bg-green-700"
-          onClick={() => setShowChangePhoneModal(true)}
-  >
-    Change Number
-  </button>
-</div>
+        {/* Divider */}
+        <span className="mx-5 text-gray-900">/</span>
 
+        {/* Dynamic Second Link */}
+        <h1 className="text-gray-900 hover:underline">Profile</h1>
+      </div>
+      {staff ? (
+        <div className="flex flex-col md:flex-row bg-white w-full mt-4 md:mt-16 space-y-6 md:space-y-0 md:space-x-8 p-8 rounded-xl shadow-lg">
+          <div className="w-full md:w-2/5 h-64 rounded-lg shadow-sm border p-4 flex flex-col items-center">
+            <div className="w-24 h-24 rounded-full bg-[#356966] text-[#ff8552] flex items-center justify-center text-3xl font-bold">
+              <h1>{staff.name.charAt(0).toUpperCase()}</h1>
+            </div>
+            <div className="flex text-center mt-6 flex-col">
+              <h2 className="text-lg font-semibold text-gray-800">
+                {staff.name}
+              </h2>
+              <p className="text-gray-600">{staff.email}</p>
+            </div>
+          </div>
+          <div className="w-full md:w-3/5 text-sm shadow-lg rounded-xl bg-white p-4 md:p-8 flex flex-col space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-800">
+                  Phone
+                </label>
+                <input
+                  type="text"
+                  value={staff.phoneNumber || "N/A"}
+                  className="w-full mt-2 p-2 bg-gray-100 border rounded-lg"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-800">
+                  Company
+                </label>
+                <input
+                  type="text"
+                  value={staff.companyName}
+                  className="w-full mt-2 p-2 bg-gray-100 border rounded-lg"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-800">
+                  Clinic
+                </label>
+                <input
+                  type="text"
+                  value={staff.clinicName}
+                  className="w-full mt-2 p-2 bg-gray-100 border rounded-lg"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-800">
+                  Status
+                </label>
+                <input
+                  type="text"
+                  value={staff.status}
+                  className="w-full mt-2 p-2 bg-gray-100 border rounded-lg"
+                  readOnly
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-800">
+                  Role
+                </label>
+                <input
+                  type="text"
+                  value={staff.role}
+                  className="w-full mt-2 p-2 bg-gray-100 border rounded-lg"
+                  readOnly
+                />
+              </div>
+            </div>
+            <button
+              className="bg-[#ff8552] w-44 text-white py-3 px-6 rounded-xl shadow-lg hover:bg-[#e74c3c] mt-6"
+              onClick={() => setIsPasswordModalOpen(true)}
+            >
+              Change Password
+            </button>
+          </div>
+        </div>
+      ) : (
+        <Loader />
+      )}
+
+      {isPasswordModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50 backdrop-blur-sm">
+          <div className="bg-white p-6 rounded-2xl shadow-2xl w-[350px] md:w-96">
+            <h2 className="text-xl font-medium text-gray-900 mb-4 text-center">
+              Change Password
+            </h2>
+            <input
+              type="password"
+              placeholder="Current Password"
+              className="w-full px-4 py-3 border rounded-lg"
+              value={passwords.current}
+              onChange={(e) =>
+                setPasswords({ ...passwords, current: e.target.value })
+              }
+            />
+            <input
+              type="password"
+              placeholder="New Password"
+              className="w-full px-4 py-3 border rounded-lg mt-4"
+              value={passwords.new}
+              onChange={(e) =>
+                setPasswords({ ...passwords, new: e.target.value })
+              }
+            />
+            <button
+              className="w-full py-3 bg-[#356966] text-white rounded-lg mt-4"
+              onClick={updatePassword}
+            >
+              Update Password
+            </button>
+            <button
+              className="w-full py-3 bg-gray-100 text-gray-600 rounded-lg mt-2"
+              onClick={() => setIsPasswordModalOpen(false)}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
-  
-    {/* Edit Modal */}
-    {showEditModal && (
-      <Modal
-        title="Edit Profile"
-        onClose={() => setShowEditModal(false)}
-        onConfirm={() => {
-          setUser({ ...user, ...editedUser });
-          setShowEditModal(false);
-        }}
-        confirmText="Save Changes"
-      >
-        <div className="mb-4">
-          <label className="block mb-2 text-lg font-medium">Name</label>
-          <input
-            type="text"
-            value={editedUser.name || ""}
-            onChange={(e) => setEditedUser({ ...editedUser, name: e.target.value })}
-            className="w-full border text-lg border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-      </Modal>
-    )}
-  
-    {/* Change Password Modal */}
-    {showChangePasswordModal && (
-      <Modal
-        title="Change Password"
-        onClose={() => setShowChangePasswordModal(false)}
-        onConfirm={handleSavePassword}
-      >
-        <div className="mb-4">
-          <label className="block mb-2 text-lg font-medium">Old Password</label>
-          <input
-            type="password"
-            value={passwords.oldPassword}
-            onChange={(e) => setPasswords({ ...passwords, oldPassword: e.target.value })}
-            className="w-full border text-lg border-gray-300 p-2 rounded-md focus:outline-none"
-          />
-        </div>
-        <div className="mb-4 text-lg">
-          <label className="block mb-2 font-medium">New Password</label>
-          <input
-            type="password"
-            value={passwords.newPassword}
-            onChange={(e) => setPasswords({ ...passwords, newPassword: e.target.value })}
-            className="w-full border text-lg border-gray-300 p-2 rounded-md focus:outline-none"
-          />
-        </div>
-      </Modal>
-    )}
-  
-    {/* Change Phone Number Modal */}
-    {showChangePhoneModal && (
-      <Modal
-        title="Change Phone Number"
-        onClose={() => setShowChangePhoneModal(false)}
-        onConfirm={handleSavePhone}
-      >
-        <div className="mb-4">
-          <label className="block mb-2 text-lg font-medium">New Phone Number</label>
-          <input
-            type="tel"
-            value={newPhoneNumber}
-            onChange={(e) => setNewPhoneNumber(e.target.value)}
-            className="w-full border text-lg  border-gray-300 p-2 rounded-md focus:outline-none"
-          />
-        </div>
-      </Modal>
-    )}
-  </div>
-  
   );
 };
 
-export default StaffProfileComponent;
+export default StaffDetails;

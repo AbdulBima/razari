@@ -15,7 +15,7 @@ const StaffMobileNav = () => {
   // Set the active link to the current pathname on component mount
   useEffect(() => {
     setActiveLink(pathname);
-  }, [pathname]);
+  }, [pathname]); 
 
   // Handle menu link click (to update the active link)
   const handleLinkClick = (link: string) => {

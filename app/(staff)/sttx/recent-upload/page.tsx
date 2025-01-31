@@ -1,263 +1,99 @@
-'use client'
+"use client";
 
-import Breadcrumb from "@/components/navigation/Breadcrumb";
 import React, { useState, useEffect } from "react";
+import RecentDeathRecords from "@/components/recentTables/RecentDeathRecords";
+import RecentBirthRecords from "@/components/recentTables/RecentBirthRecords";
+import RecentEmergencyRecords from "@/components/recentTables/RecentEmergencyRecords";
+import RecentAdmissionRecords from "@/components/recentTables/RecentAdmissionRecords";
+import RecentDiagnosisRecords from "@/components/recentTables/RecentDiagnosisRecords";
+import Loader from "@/utils/loader";
+import Link from "next/link";
 
-// Define Types for Data
-interface AdmissionRecord {
-  hospitalId: string;
-  time: string;
-  gender: string;
-  ageGroup: string;
-  reason: string;
-}
+type Role =
+  | "superstaff"
+  | "birth officer"
+  | "consultant"
+  | "admission officer"
+  | "emergency officer"
+  | "record officer"
+  | null;
 
-interface DeathRecord {
-  hospitalId: string;
-  time: string;
-  cause: string;
-  ageGroup: string;
-}
-
-interface DiagnosisRecord {
-  doctorId: string;
-  time: string;
-  diagnosis: string;
-  ageGroup: string;
-}
-
-interface EmergencyRecord {
-  hospitalId: string;
-  time: string;
-  type: string;
-  severity: string;
-}
-
-interface BirthRecord {
-  hospitalId: string;
-  time: string;
-  gender: string;
-  mode: string;
-}
-
-interface MockApiResponse {
-  admissions: AdmissionRecord[];
-  deaths: DeathRecord[];
-  diagnoses: DiagnosisRecord[];
-  emergencies: EmergencyRecord[];
-  births: BirthRecord[];
-}
-
-// Mock API Simulation
-const mockApiResponse: MockApiResponse = {
-  admissions: [
-    { hospitalId: "H001", time: "2025-01-05 14:30", gender: "Male", ageGroup: "Adult", reason: "Severe pain" },
-    { hospitalId: "H002", time: "2025-01-06 09:00", gender: "Female", ageGroup: "Child", reason: "Routine check-up" },
-  ],
-  deaths: [
-    { hospitalId: "H001", time: "2025-01-05 20:00", cause: "Heart failure", ageGroup: "Adult" },
-    { hospitalId: "H002", time: "2025-01-06 13:00", cause: "Cancer", ageGroup: "Adult" },
-  ],
-  diagnoses: [
-    { doctorId: "D001", time: "2025-01-05 08:30", diagnosis: "Flu", ageGroup: "Adult" },
-    { doctorId: "D002", time: "2025-01-06 11:00", diagnosis: "COVID-19", ageGroup: "Child" },
-  ],
-  emergencies: [
-    { hospitalId: "H001", time: "2025-01-05 10:30", type: "Trauma", severity: "High" },
-    { hospitalId: "H002", time: "2025-01-06 07:45", type: "Surgical", severity: "Medium" },
-  ],
-  births: [
-    { hospitalId: "H001", time: "2025-01-05 16:00", gender: "Female", mode: "Normal" },
-    { hospitalId: "H002", time: "2025-01-06 12:30", gender: "Male", mode: "C-Section" },
-  ],
-};
-
-const fetchDataFromApi = <T extends keyof MockApiResponse>(category: T): Promise<MockApiResponse[T]> => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(mockApiResponse[category]);
-      }, 1000); // Simulating network delay
-    });
-  };
-  
-
-const RecentDataPage: React.FC = () => {
-  const [recentData, setRecentData] = useState<MockApiResponse>({
-    admissions: [],
-    deaths: [],
-    diagnoses: [],
-    emergencies: [],
-    births: [],
-  });
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [totalPages, setTotalPages] = useState<number>(1);
+const RecentUpload: React.FC = () => {
+  const [role, setRole] = useState<Role>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchAllData = async () => {
-      try {
-        const admissions = await fetchDataFromApi("admissions");
-        const deaths = await fetchDataFromApi("deaths");
-        const diagnoses = await fetchDataFromApi("diagnoses");
-        const emergencies = await fetchDataFromApi("emergencies");
-        const births = await fetchDataFromApi("births");
+    // Simulate a delay for loading the role from localStorage (for demo purposes)
+    const timer = setTimeout(() => {
+      const savedRole = localStorage.getItem("sttxr") as Role;
+      setRole(savedRole);
+      setLoading(false); // Stop loading once the role is retrieved
+    }, 1000); // You can adjust this timeout as per your needs
 
-        setRecentData({
-          admissions,
-          deaths,
-          diagnoses,
-          emergencies,
-          births,
-        });
+    return () => clearTimeout(timer); // Cleanup on component unmount
+  }, []);
 
-        setTotalPages(1); // We have 1 page of mock data for simplicity
-      } catch (error) {
-        console.logr("Error fetching data:", error);
-      }
-    };
+  const renderComponents = () => {
+    // Check the role and render the appropriate components
+    if (role === "superstaff") {
+      // Superstaff should see all components
+      return (
+        <>
+          <RecentDiagnosisRecords />
+          <RecentAdmissionRecords />
+          <RecentBirthRecords />
+          <RecentEmergencyRecords />
+          <RecentDeathRecords />
+        </>
+      );
+    }
 
-    fetchAllData();
-  }, [currentPage]);
-
-  const handlePageChange = (direction: "prev" | "next") => {
-    if (direction === "prev" && currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    } else if (direction === "next" && currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+    // Render based on other roles
+    switch (role) {
+      case "birth officer":
+        return <RecentBirthRecords />;
+      case "consultant":
+        return <RecentDiagnosisRecords />;
+      case "admission officer":
+        return <RecentAdmissionRecords />;
+      case "emergency officer":
+        return <RecentEmergencyRecords />;
+      case "record officer":
+        return <RecentDeathRecords />;
+      default:
+        return <div>No records available for this role.</div>;
     }
   };
 
-  return (
-    <div className="oppins-regular bg-white shadow-md flex h-full overflow-y-auto flex-col lg:flex-row md:px-40 px-10 mt-6  gap-6 w-full">
-        <Breadcrumb secondLink = {{href: "/recent-upload",label: "Recent Upload" }} />
+  if (loading) {
+    // Show a loading state before rendering any content
+    return (
+      <Loader/  >
+    );
+  }
 
-     
-      <div className="flex-1 w-full overflow-x-auto">
-        {Object.keys(recentData).map((category) => (
-          <div key={category} className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-800">{category}</h3>
-            <table className="w-full table-auto border-collapse border border-gray-300 mt-4">
-              <thead>
-                <tr className="bg-[#356966] text-white">
-                  {category === "admissions" && (
-                    <>
-                      <th className="border border-gray-300 p-2 text-xs">Hospital ID</th>
-                      <th className="border border-gray-300 p-2 text-xs">Time</th>
-                      <th className="border border-gray-300 p-2 text-xs">Gender</th>
-                      <th className="border border-gray-300 p-2 text-xs">Age Group</th>
-                      <th className="border border-gray-300 p-2 text-xs">Reason</th>
-                    </>
-                  )}
-                  {category === "deaths" && (
-                    <>
-                      <th className="border border-gray-300 p-2 text-xs">Hospital ID</th>
-                      <th className="border border-gray-300 p-2 text-xs">Time</th>
-                      <th className="border border-gray-300 p-2 text-xs">Cause</th>
-                      <th className="border border-gray-300 p-2 text-xs">Age Group</th>
-                    </>
-                  )}
-                  {category === "diagnoses" && (
-                    <>
-                      <th className="border border-gray-300 p-2 text-xs">Doctor ID</th>
-                      <th className="border border-gray-300 p-2 text-xs">Time</th>
-                      <th className="border border-gray-300 p-2 text-xs">Diagnosis</th>
-                      <th className="border border-gray-300 p-2 text-xs">Age Group</th>
-                    </>
-                  )}
-                  {category === "emergencies" && (
-                    <>
-                      <th className="border border-gray-300 p-2 text-xs">Hospital ID</th>
-                      <th className="border border-gray-300 p-2 text-xs">Time</th>
-                      <th className="border border-gray-300 p-2 text-xs">Type</th>
-                      <th className="border border-gray-300 p-2 text-xs">Severity</th>
-                    </>
-                  )}
-                  {category === "births" && (
-                    <>
-                      <th className="border border-gray-300 p-2 text-xs">Hospital ID</th>
-                      <th className="border border-gray-300 p-2 text-xs">Time</th>
-                      <th className="border border-gray-300 p-2 text-xs">Gender</th>
-                      <th className="border border-gray-300 p-2 text-xs">Mode</th>
-                    </>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {recentData[category as keyof MockApiResponse].map((row, index) => (
-                  <tr key={index} className="even:bg-gray-100">
-                    {category === "admissions" && (
-                      <>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as AdmissionRecord).hospitalId}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as AdmissionRecord).time}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as AdmissionRecord).gender}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as AdmissionRecord).ageGroup}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as AdmissionRecord).reason}</td>
-                      </>
-                    )}
-                    {category === "deaths" && (
-                      <>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DeathRecord).hospitalId}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DeathRecord).time}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DeathRecord).cause}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DeathRecord).ageGroup}</td>
-                      </>
-                    )}
-                    {category === "diagnoses" && (
-                      <>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DiagnosisRecord).doctorId}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DiagnosisRecord).time}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DiagnosisRecord).diagnosis}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as DiagnosisRecord).ageGroup}</td>
-                      </>
-                    )}
-                    {category === "emergencies" && (
-                      <>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as EmergencyRecord).hospitalId}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as EmergencyRecord).time}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as EmergencyRecord).type}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as EmergencyRecord).severity}</td>
-                      </>
-                    )}
-                    {category === "births" && (
-                      <>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as BirthRecord).hospitalId}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as BirthRecord).time}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as BirthRecord).gender}</td>
-                        <td className="border border-gray-300 p-2 text-center text-xs">{(row as BirthRecord).mode}</td>
-                      </>
-                    )}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
+  return <div className="overflow-y-auto h-full overscroll-y-auto pb-10">
+      <div className="md:hidden flex text-sm items-center opacity-30  px-8 mt-2 mb-5 overflow-x-auto whitespace-nowrap">
+        {/* Fixed Home Link */}
+        <Link href="/sttx/addrecord" className="text-gray-900">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="w-5 h-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </Link>
 
-        {/* Pagination Controls */}
-        <div className="flex text-xs justify-between items-center mt-4">
-          <span>
-            Page {currentPage} of {totalPages}
-          </span>
-          <div className="flex space-x-2">
-            <button
-              className={`px-2 py-1 border rounded ${currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-blue-500"}`}
-              onClick={() => handlePageChange("prev")}
-              disabled={currentPage === 1}
-            >
-              Previous
-            </button>
-            <button
-              className={`px-2 py-1 border rounded ${currentPage === totalPages ? "text-gray-400 cursor-not-allowed" : "text-blue-500"}`}
-              onClick={() => handlePageChange("next")}
-              disabled={currentPage === totalPages}
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        {/* Divider */}
+        <span className="mx-5 text-gray-900">/</span>
+
+        {/* Dynamic Second Link */}
+        <h1 className="text-gray-900 hover:underline">Recent Upload</h1>
       </div>
-    </div>
-  );
+      
+      {renderComponents()}</div>;
 };
 
-export default RecentDataPage;
+export default RecentUpload;

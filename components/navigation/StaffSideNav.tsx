@@ -15,7 +15,7 @@ const StaffSideNav = () => {
 
   const handleLinkClick = (link: SetStateAction<string>) => {
     setActiveLink(link);
-  };
+  }; 
 
   const handleLogout = () => {
     // Clear specific keys from localStorage

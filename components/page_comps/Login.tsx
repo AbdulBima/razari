@@ -100,9 +100,7 @@ const LoginPage = () => {
         </div>
 
         {/* Welcome Text */}
-        <p className="text-gray-500 mb-6">
-          Enter your email and password
-        </p>
+        <p className="text-gray-500 mb-6">Enter your email and password</p>
 
         {/* Login Form */}
         <div>
@@ -216,21 +214,18 @@ const LoginPage = () => {
         </div>
 
         {/* Login Button */}
-        <button
-          onClick={handleLogin}
-          className={`w-full py-3  flex items-center justify-center rounded-full transition mb-4 ${
-            isLoading
-              ? " text-black cursor-not-allowed" // White background, black text, and disabled cursor
-              : "bg-[#356966] shadow-lg text-white hover:bg-[#ff8552]" // Default styling
-          }`}
-          disabled={isLoading} // Disable the button while loading
-        >
-          {isLoading ? (
-            <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
-          ) : (
-            "Login"
-          )}
-        </button>
+        {isLoading ? (
+          <div className="w-full py-2 flex items-center justify-center rounded-full bg-gray-300 cursor-not-allowed mb-4">
+            <div className="animate-spin h-5 w-5 border-2 border-gray-600 border-t-transparent rounded-full"></div>
+          </div>
+        ) : (
+          <button
+            onClick={handleLogin}
+            className="w-full py-2 flex items-center justify-center rounded-full bg-[#356966] shadow-sm text-white hover:bg-[#ff8552] transition mb-4"
+          >
+            Login
+          </button>
+        )}
       </div>
       {/* Conditionally render the Modal */}
       {modalVisible && (

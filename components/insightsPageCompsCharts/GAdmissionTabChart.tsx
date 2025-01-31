@@ -79,7 +79,7 @@ const GAdmissionTabChart = ({ companyId }: { companyId: string }) => {
           ],
         });
       } catch (error) {
-        console.logr("Error fetching pie chart data:", error);
+        console.log("Error fetching pie chart data:", error);
       }
     };
 

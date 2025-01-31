@@ -28,7 +28,7 @@ const ClinicsTab = () => {
       try {
         const companyId = localStorage.getItem("cmpx");
         if (!companyId) {
-          console.logr("Company ID not found in local storage.");
+          console.log("Company ID not found in local storage.");
           setLoading(false);
           return;
         }
@@ -38,7 +38,7 @@ const ClinicsTab = () => {
         );
         setClinics(response.data);
       } catch (error) {
-        console.logr("Failed to fetch clinics:", error);
+        console.log("Failed to fetch clinics:", error);
       } finally {
         setLoading(false);
       }

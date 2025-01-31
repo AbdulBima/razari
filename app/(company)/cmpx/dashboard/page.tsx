@@ -66,7 +66,7 @@ const Dashboard = () => {
 
       
       } catch (error) {
-        console.logr("Error fetching data:", error);
+        console.log("Error fetching data:", error);
       } finally {
         setLoading(false);
       }

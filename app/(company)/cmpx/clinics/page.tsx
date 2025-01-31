@@ -157,7 +157,7 @@ const HospitalManagement = () => {
   };
 
   return (
-    <div className="poppins-regular px-6 md:px-10 pt-2 md:pt-0 w-full bg-gray-50 h-full overflow-y-hidden">
+    <div className="poppins-regular px-6  pt-2 md:pt-0 w-full bg-gray-50 h-full overflow-y-hidden">
       <Breadcrumb secondLink={{ href: "/clinics", label: "Hospital(s) Management" }} />
       {modalVisible && (
         <Modal
@@ -166,7 +166,7 @@ const HospitalManagement = () => {
           onClose={() => setModalVisible(false)}
         />
       )}
-      <div className="mb-4 flex flex-wrap items-center mt-4 justify-between">
+      <div className="mb-4 flex flex-wrap items-center mt-3 justify-between">
   <div className="hidden text-gray-500 md:flex items-center space-x-4 ">
 
     <h1> Sort by: </h1>
@@ -206,7 +206,7 @@ const HospitalManagement = () => {
   </div>
   <div className=" flex justify-end mb-2">
     <button
-      className="bg-[#356966] text-white px-3 py-1.5 mt-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
+      className="bg-[#356966] text-white px-2 py-1 mt-2 rounded-lg shadow-md hover:bg-green-700 transition-all"
       onClick={() => {
         setShowModal(true);
         setNewHospital({ clinicId: "", name: "", country: "Nigeria", state: "" });
@@ -238,19 +238,19 @@ const HospitalManagement = () => {
           <table className="w-full table-auto text-sm bg-white rounded-lg shadow-sm">
             <thead>
               <tr className="bg-[#356966] text-white text-left">
-                <th className="px-3 py-1.5 hidden md:block">Hospital ID</th>
-                <th className="px-3 py-1.5">Name</th>
-                <th className="px-3 py-1.5">State</th>
-                <th className="px-3 py-1.5">Actions</th>
+                <th className="px-2 py-1 hidden md:block">Hospital ID</th>
+                <th className="px-2 py-1">Name</th>
+                <th className="px-2 py-1">State</th>
+                <th className="px-2 py-1">Actions</th>
               </tr>
             </thead>
             <tbody>
   {hospitalList.map((hospital) => (
     <tr key={hospital.id} className="border-t border-gray-200 hover:bg-gray-50 odd:bg-gray-100 even:bg-white">
-      <td className="px-3 py-1.5 hidden uppercase md:block">{hospital.clinicId}</td>
-      <td className="px-3 py-1.5">{hospital.name}</td>
-      <td className="px-3 py-1.5">{hospital.state}</td>
-      <td className="px-3 py-1.5 flex space-x-4">
+      <td className="px-2 py-1 hidden uppercase md:block">{hospital.clinicId}</td>
+      <td className="px-2 py-1">{hospital.name}</td>
+      <td className="px-2 py-1">{hospital.state}</td>
+      <td className="px-2 py-1 flex space-x-4">
         <button
           className="text-[#356966] bg-[#e0f7f3] text-sm py-1 px-2 rounded-xl"
           onClick={() => {
@@ -339,13 +339,13 @@ const HospitalManagement = () => {
             </div>
             <div className="flex justify-end space-x-4">
               <button
-                className="bg-gray-500 text-white px-3 py-1.5 rounded"
+                className="bg-gray-500 text-white px-2 py-1 rounded"
                 onClick={() => setShowModal(false)}
               >
                 Cancel
               </button>
               <button
-                className="bg-[#356966] text-white px-3 py-1.5 rounded"
+                className="bg-[#356966] text-white px-2 py-1 rounded"
                 onClick={handleAddOrUpdateHospital}
               >
                 {editingHospital ? "Update" : "Add"}

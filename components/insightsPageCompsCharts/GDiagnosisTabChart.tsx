@@ -60,7 +60,7 @@ const GDiagnosisTabChart = ({ companyId }: { companyId: string }) => {
           ],
         });
       } catch (error) {
-        console.logr("Error fetching line chart data:", error);
+        console.log("Error fetching line chart data:", error);
       }
     };
 
@@ -88,7 +88,7 @@ const GDiagnosisTabChart = ({ companyId }: { companyId: string }) => {
           ],
         });
       } catch (error) {
-        console.logr("Error fetching pie chart data:", error);
+        console.log("Error fetching pie chart data:", error);
       }
     };
 
@@ -108,7 +108,7 @@ const GDiagnosisTabChart = ({ companyId }: { companyId: string }) => {
           ],
         });
       } catch (error) {
-        console.logr("Error fetching bar chart data:", error);
+        console.log("Error fetching bar chart data:", error);
       }
     };
 

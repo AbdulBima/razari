@@ -110,7 +110,7 @@ const ChartSection = () => {
   
         setChartData(chartData);
       } catch (error) {
-        console.logr("Error fetching chart data:", error);
+        console.log("Error fetching chart data:", error);
       }
     };
   

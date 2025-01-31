@@ -27,7 +27,7 @@ export const useAuthGuard = () => {
           router.replace("/login"); // Redirect to login if token is invalid
         }
       } catch (err) {
-        console.logr("Token verification failed:", err);
+        console.log("Token verification failed:", err);
         setError("Token verification failed");
         router.replace("/login");
       } finally {

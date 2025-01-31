@@ -5,6 +5,7 @@ import "../globals.css";
 import StaffMobileNav from "@/components/navigation/StaffMobileNav";
 import StaffSideNav from "@/components/navigation/StaffSideNav";
 import StaffDashboardNavbar from "@/components/navigation/StaffDashboardNav";
+import StaffAuthWrapper from "@/components/StaffAuthWrapper";
 
 export default function StaffLayout({
   children,
@@ -19,9 +20,11 @@ export default function StaffLayout({
           <div className="hidden bg-transparent border-none md:flex w-[15vw] h-full fixed">
             <StaffSideNav />
           </div>
-          <div className="flex md:overflow-y-auto flex-1 w-full flex-col ml-0 md:ml-[15vw] h-full">
+          <div className="flex md:overflow-y-hidden flex-1 w-full flex-col ml-0 md:ml-[15vw] h-full">
             <StaffDashboardNavbar />
-            <div className="poppins-regular md:pt-16 pb-5">{children}</div>
+            <div className="poppins-regular h-full md:pt-16 pb-5"><StaffAuthWrapper>
+            {children}
+              </StaffAuthWrapper></div>
           </div>
         </div>
       </body>

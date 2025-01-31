@@ -97,7 +97,7 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
           ],
         });
       } catch (error) {
-        console.logr("Error fetching pie chart data:", error);
+        console.log("Error fetching pie chart data:", error);
       }
     };
 

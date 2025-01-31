@@ -401,7 +401,7 @@ const handleSaveChanges = () => {
       {/* Change Password Modal */}
       {showPasswordModal && (
         <ModalT
-          title="Change Company Password"
+          title="Change Company Password"          
           onClose={() => setShowPasswordModal(false)}
           onConfirm={handleChangePassword}
           confirmText="Change Password"

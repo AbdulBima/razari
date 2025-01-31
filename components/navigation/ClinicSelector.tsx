@@ -26,7 +26,7 @@ const ClinicSelector = ({
           const response = await axios.get<Clinic[]>(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`);
           setClinics(response.data.filter((clinic) => clinic.status));
         } catch (error) {
-          console.logr("Error fetching clinics:", error);
+          console.log("Error fetching clinics:", error);
         }
       }
       setLoading(false);

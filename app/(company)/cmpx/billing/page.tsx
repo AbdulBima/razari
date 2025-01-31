@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Breadcrumb from "@/components/navigation/Breadcrumb";
 
 const Billing = () => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -65,7 +66,6 @@ const Billing = () => {
   
   const totalPages = Math.ceil(totalRecords / recordsPerPage);
 
-  const handleDownloadReceipt = () => alert("Receipt downloaded!");
 
   const handlePageChange = (action: "prev" | "next") => {
     if (action === "prev" && currentPage > 1) setCurrentPage(currentPage - 1);
@@ -81,8 +81,13 @@ const Billing = () => {
   }
 
   return (
-    <div className="poppins-regular flex flex-col md:flex-row w-full py-10 px-8">
-      <div className="flex-1 pr-10">
+    <div className="poppins-regular px-6 md:px-10  pt-2 md:pt-0 w-full bg-gray-50 h-full overflow-y-hidden">
+     
+       <Breadcrumb secondLink={{ href: "/billing", label: "Billing" }} />
+      
+       <div className="poppins-regular flex flex-col md:flex-row w-full py-4 md:py-10  ">
+      
+      <div className="flex-1 md:pr-10">
         <h1 className="text-2xl text-black font-bold mb-2">Billing Details</h1>
         <p className="text-sm text-gray-700 mb-6">
           View your order history, download receipts, and manage your billing preferences.
@@ -96,22 +101,17 @@ const Billing = () => {
                 <th className="px-4 py-2 text-xs">Amount</th>
                 <th className="px-4 py-2 text-xs">Billing Cycle</th>
                 <th className="px-4 py-2 text-xs">Status</th>
-                <th className="px-4 py-2 text-xs">Action</th>
               </tr>
             </thead>
             <tbody>
               {billingData.length > 0 ? (
                 billingData.map((record, index) => (
                   <tr key={index} className="even:bg-white text-gray-900 odd:bg-[#f9f9f9]">
-                    <td className="px-4 py-3 text-xs">{record.date}</td>
+                    <td className="px-3 py-3 text-xs whitespace-nowrap">{record.date}</td>
                     <td className="px-4 py-3 text-xs">${record.amount}</td>
                     <td className="px-4 py-3 text-xs">{record.billingCycle}</td>
                     <td className="px-4 py-3 text-xs">{record.status}</td>
-                    <td className="px-4 py-3 text-xs">
-                      <button onClick={handleDownloadReceipt} className="px-4 py-2 rounded border text-gray-900 text-xs">
-                        Download
-                      </button>
-                    </td>
+                    
                   </tr>
                 ))
               ) : (
@@ -144,7 +144,7 @@ const Billing = () => {
       
       </div>
 
-      <div className="w-full md:w-1/3 bg-orange-700 rounded-3xl shadow-lg text-white p-6">
+      <div className="w-full md:w-1/3 bg-orange-700  mt-8 rounded-3xl shadow-lg text-white p-6">
         <h2 className="text-xl font-bold mb-4">
           {planData ? "Current Active Plan" : "No Active Subscription"}
         </h2>
@@ -158,6 +158,8 @@ const Billing = () => {
           <p className="text-sm">No active subscription found. Please choose a plan to get started.</p>
         )}
       </div>
+
+    </div>
     </div>
   );
 };
