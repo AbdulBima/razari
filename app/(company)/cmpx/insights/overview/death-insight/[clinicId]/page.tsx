@@ -182,3 +182,5 @@ const DeathInsight = () => {
 };
 
 export default DeathInsight;
+
+export const runtime = 'edge';

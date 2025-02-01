@@ -236,3 +236,5 @@ const AdmissionPage = () => {
 };
 
 export default AdmissionPage;
+
+export const runtime = 'edge';

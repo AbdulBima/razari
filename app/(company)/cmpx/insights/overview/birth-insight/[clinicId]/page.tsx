@@ -182,3 +182,5 @@ const BirthInsight = () => {
 };
 
 export default BirthInsight;
+
+export const runtime = 'edge';

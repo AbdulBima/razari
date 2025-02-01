@@ -182,3 +182,5 @@ const EmergencyInsight = () => {
 };
 
 export default EmergencyInsight;
+
+export const runtime = 'edge';

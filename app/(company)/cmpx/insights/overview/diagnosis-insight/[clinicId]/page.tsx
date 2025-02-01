@@ -237,3 +237,5 @@ const DiagnosisInsight = () => {
 };
 
 export default DiagnosisInsight;
+
+export const runtime = 'edge';
