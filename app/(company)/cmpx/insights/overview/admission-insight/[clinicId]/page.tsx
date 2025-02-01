@@ -5,7 +5,6 @@ import Breadcrumb from "@/components/navigation/Breadcrumb";
 import AdmissionCharts from "@/components/insightPageCharts/AdmissionCharts";
 
 import RecommendationModal from "@/components/RecommendationModal";
-import Loader from "@/utils/loader";
 import companyApi from "@/utils/apiCompany";
 
 interface Admission {
@@ -81,7 +80,9 @@ const AdmissionPage = () => {
       <AdmissionCharts clinicId={clinicId} />
 
       {loading ? (
-        <div className="mt-6"><Loader /></div>
+    <div className="flex justify-center items-center mt-8">
+    <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+  </div>
       ) : (
         <div className="bg-white grid grid-cols-4 gap-4 shadow-md p-2 mt-6 rounded-lg border border-gray-200">
           <div className="col-span-4">
