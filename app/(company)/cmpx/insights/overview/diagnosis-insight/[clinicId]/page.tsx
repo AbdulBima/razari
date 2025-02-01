@@ -3,11 +3,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import RecommendationModal from "@/components/RecommendationModal";
-import Loader from "@/utils/loader";
+
 import DiagnosisCharts from "@/components/insightPageCharts/DiagnosisCharts";
+import companyApi from "@/utils/apiCompany";
 
 interface Diagnosis {
   time: string;
@@ -37,8 +37,8 @@ const DiagnosisInsight = () => {
     try {
       const skip = (currentPage - 1) * rowsPerPage;
       const limit = rowsPerPage;
-      const url = `http://127.0.0.1:8000/api/diagnosis/get/${clinicId}?skip=${skip}&limit=${limit}`;
-      const response = await axios.get(url);
+      const url = `/diagnosis/get/${clinicId}?skip=${skip}&limit=${limit}`;
+      const response = await companyApi.get(url);
       setDiagnosis(response.data.diagnosis);
       setTotalDiagnosis(response.data.total); // Store total diagnosis count
     } catch (error) {
@@ -51,6 +51,7 @@ const DiagnosisInsight = () => {
     if (clinicId) {
       fetchDiagnosis();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clinicId, currentPage]); // Trigger fetch on clinicId or currentPage change
 
   // Sorting functionality
@@ -82,7 +83,9 @@ const DiagnosisInsight = () => {
       <DiagnosisCharts clinicId={clinicId} />
 
       {loading ? (
-        <Loader />
+       <div className="flex justify-center items-center mt-8">
+       <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+     </div>
       ) : (
         <div className="bg-white grid grid-cols-4 gap-4 shadow-md p-2 mt-6 rounded-lg border border-gray-200">
           <div className="col-span-4">

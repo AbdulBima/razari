@@ -1,11 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Modal from "@/components/PopAlert";
 import Loader from "@/utils/loader";
 import Link from "next/link";
+import staffApi from "@/utils/apiStaff";
 
 const StaffDetails = () => {
   interface Staff {
@@ -48,10 +49,11 @@ const StaffDetails = () => {
 
   const fetchStaffDetails = async () => {
     try {
-      const { data } = await axios.get(
-        `http://127.0.0.1:8000/api/staff/stxi/${companyId}/${staffId}`
+      const { data } = await staffApi.get(
+        `/staff/stxi/${companyId}/${staffId}`
       );
       setStaff(data);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setAlert({ message: "Error fetching staff details", type: "error" });
     }
@@ -59,8 +61,8 @@ const StaffDetails = () => {
 
   const updatePassword = async () => {
     try {
-      await axios.put(
-        `http://127.0.0.1:8000/api/staff/upd/${companyId}/${staffId}/update-password`,
+      await staffApi.put(
+        `/staff/upd/${companyId}/${staffId}/update-password`,
         {
           currentPassword: passwords.current,
           newPassword: passwords.new,
@@ -69,6 +71,7 @@ const StaffDetails = () => {
       setPasswords({ current: "", new: "" });
       setIsPasswordModalOpen(false);
       setAlert({ message: "Password updated successfully", type: "success" });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setAlert({ message: "Error updating password", type: "error" });
     }

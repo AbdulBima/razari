@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import staffApi from '@/utils/apiStaff';
 
 const RecentDiagnosisRecords = () => {
   interface Record {
@@ -18,6 +18,7 @@ const RecentDiagnosisRecords = () => {
   const [records, setRecords] = useState<RecordsResponse | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const RecentDiagnosisRecords = () => {
     setError(null);
 
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/diagnosis/get-recent/${submitterId}`);
+      const response = await staffApi.get(`/diagnosis/get-recent/${submitterId}`);
       setRecords(response.data);
       setLoading(false);
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,9 +60,6 @@ const RecentDiagnosisRecords = () => {
       hour12: true,
     });
   };
-
-
-  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <div className="poppins-regular max-w-full sm:max-w-6xl mx-auto px-8 py-4">

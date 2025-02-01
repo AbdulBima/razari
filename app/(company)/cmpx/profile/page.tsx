@@ -2,9 +2,10 @@
 
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+
 import Loader from "@/utils/loader";
 import Modal from "@/components/PopAlert";
+import companyApi from "@/utils/apiCompany";
 
 // Define types for company data
 type CompanyProfile = {
@@ -87,8 +88,8 @@ useEffect(() => {
   const companyId = localStorage.getItem("cmpx");
 
   if (companyId) {
-    axios
-      .get(`http://127.0.0.1:8000/api/company/get/${companyId}`)
+    companyApi
+      .get(`/company/get/${companyId}`)
       .then((response) => {
         setCompany(response.data); // Set the company data in state
         setEditedCompany({
@@ -128,8 +129,8 @@ const handleSaveChanges = () => {
       phone: editedCompany.phone || company.phone,
     };
 
-    axios
-      .put(`http://127.0.0.1:8000/api/company/${companyId}/update`, updatedData)
+    companyApi
+      .put(`/company/${companyId}/update`, updatedData)
       .then((response) => {
         setModalMessage(response.data.message); // Show success message
         setModalType("success"); // Show success modal
@@ -160,9 +161,9 @@ const handleSaveChanges = () => {
     const companyId = company?.companyId;
     if (companyId) {
       // Send password change request to server
-      axios
+      companyApi
         .post(
-          `http://127.0.0.1:8000/api/company/${companyId}/change-password`,
+          `/company/${companyId}/change-password`,
           {
             currentPassword,
             newPassword,
@@ -186,8 +187,8 @@ const handleSaveChanges = () => {
     try {
       const companyId = localStorage.getItem("cmpx");
       if (companyId) {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/company/${companyId}/api-key`
+        const response = await companyApi.get(
+          `/company/${companyId}/api-key`
         );
         setApiKey(response.data.apiKey);
         setShowApiKeyModal(true);

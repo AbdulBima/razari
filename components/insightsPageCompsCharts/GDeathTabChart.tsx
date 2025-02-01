@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,6 +15,7 @@ import {
 } from "chart.js";
 
 import { ChartData } from "chart.js";
+import companyApi from "@/utils/apiCompany";
 
 ChartJS.register(
   CategoryScale,
@@ -49,8 +49,8 @@ const GDeathTabChart = ({ companyId }: { companyId: string }) => {
 
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/months-count`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${companyId}/all/months-count`;
+        const { data } = await companyApi.get(url);
 
     
 
@@ -75,8 +75,8 @@ const GDeathTabChart = ({ companyId }: { companyId: string }) => {
 
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/demographics`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${companyId}/all/demographics`;
+        const { data } = await companyApi.get(url);
 
         // Adjust pie chart to display demographic distribution (Adult-male, Adult-female, etc.)
         const demographicLabels = Object.keys(data.demographicDistribution);
@@ -98,8 +98,8 @@ const GDeathTabChart = ({ companyId }: { companyId: string }) => {
 
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${companyId}/all/cause-count`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${companyId}/all/cause-count`;
+        const { data } = await companyApi.get(url);
 
         // Adjust bar chart to display cause distribution (accident, illness, others)
         const causeLabels = Object.keys(data.causeDistribution);

@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
 import Modal from "@/components/PopAlert";
+import staffApi from "@/utils/apiStaff";
 
 const emergencySchema = z.object({
   type: z.enum(["Trauma", "Medical", "Surgical", "Obstetric", "Pediatric"]),
@@ -43,8 +43,8 @@ export default function AddEmergencyRecord() {
     const payload = { ...data, time: new Date().toISOString() };
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/emergencies/create",
+      const response = await staffApi.post(
+        "/emergencies/create",
         payload,
         {
           headers: { "Content-Type": "application/json" },

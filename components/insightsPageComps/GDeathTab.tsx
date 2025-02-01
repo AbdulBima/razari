@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GDeathTabChart from "../insightsPageCompsCharts/GDeathTabChart";
+import companyApi from "@/utils/apiCompany";
 
 interface Death {
   time: string;
@@ -41,8 +41,8 @@ const GDeathTab = () => {
     try {
       const skip = (currentPage - 1) * rowsPerPage;
       const limit = rowsPerPage;
-      const url = `http://127.0.0.1:8000/api/death-records/get/${companyId}/all?skip=${skip}&limit=${limit}`;
-      const response = await axios.get(url);
+      const url = `/death-records/get/${companyId}/all?skip=${skip}&limit=${limit}`;
+      const response = await companyApi.get(url);
       setDeaths(response.data.records); // Use the "records" field from API
       setTotalRecords(response.data.total); // Use the "total" field from API
     } catch (error) {

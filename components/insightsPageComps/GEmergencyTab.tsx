@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 import Loader from "@/utils/loader";
 import RecommendationModal from "@/components/RecommendationModal";
 import GEmergencyTabCharts from "../insightsPageCompsCharts/GEmergencyTabChart";
+import companyApi from "@/utils/apiCompany";
 
 interface Emergency {
   time: string;
@@ -40,8 +40,8 @@ const GEmergencyTab = () => {
     try {
       const skip = (currentPage - 1) * rowsPerPage;
       const limit = rowsPerPage;
-      const url = `http://127.0.0.1:8000/api/emergencies/get/${companyId}/all?skip=${skip}&limit=${limit}`;
-      const response = await axios.get(url);
+      const url = `/emergencies/get/${companyId}/all?skip=${skip}&limit=${limit}`;
+      const response = await companyApi.get(url);
       setIncidents(response.data.records);
       setTotalRecords(response.data.total);
     } catch (error) {

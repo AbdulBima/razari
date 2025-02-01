@@ -1,19 +1,22 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
 import Modal from "@/components/PopAlert";
+import staffApi from "@/utils/apiStaff";
 
 const deathRecordSchema = z.object({
-  cause: z.enum(["accident", "illness", "others"]),
-  category: z.enum(["Adult-male", "Child-male", "Adult-female", "Child-female"]),
-  submitterId: z.string().min(1),
-  companyId: z.string().min(1),
-  clinicId: z.string().min(1),
+  cause: z.enum(["accident", "illness", "others"], {
+    required_error: "Please select a cause of death.",
+  }),
+  category: z.enum(["Adult-male", "Child-male", "Adult-female", "Child-female"], {
+    required_error: "Please select a category for the deceased.",
+  }),
+  submitterId: z.string().min(4, "Submitter ID must be at least 4 characters."),
+  companyId: z.string().min(4, "Company ID must be at least 4 characters."),
+  clinicId: z.string().min(4, "Clinic ID must be at least 4 characters."),
 });
 
 type DeathRecordFormData = z.infer<typeof deathRecordSchema>;
@@ -44,12 +47,9 @@ export default function AddDeathRecord() {
     const payload = { ...data, time: new Date().toISOString() };
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/death-records/create",
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+      const response = await staffApi.post(
+        "/death-records/create",
+        payload
       );
 
       if (response.status === 200) {
@@ -64,6 +64,7 @@ export default function AddDeathRecord() {
           type: "error",
         });
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setNotification({
         message: "Network error. Please try again.",

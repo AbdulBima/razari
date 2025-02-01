@@ -13,9 +13,9 @@ import {
   deactivateStaff,
 } from "@/services/staffApi";
 import { FC, useState, useEffect } from "react";
-import axios from "axios"; // Import axios for clinic data fetching
 import Loader from "@/utils/loader";
 import Modal from "@/components/PopAlert";
+import companyApi from "@/utils/apiCompany";
 
 const StaffManagement: FC = () => {
   interface Staff {
@@ -65,8 +65,8 @@ const StaffManagement: FC = () => {
   // Fetch clinics when companyId is available
   useEffect(() => {
     if (companyId) {
-      axios
-        .get(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`)
+      companyApi
+        .get(`/clinic/${companyId}/clinic-list`)
         .then((response) => {
           setClinics(response.data);
         })
@@ -184,8 +184,8 @@ const handleChangePassword = () => {
   if (companyId && currentStaff && newPassword) {
     const passwordData = { newPassword };
 
-    axios
-      .put(`http://127.0.0.1:8000/api/staff/${companyId}/${currentStaff.staffId}/update-password`, passwordData)
+    companyApi
+      .put(`/staff/${companyId}/${currentStaff.staffId}/update-password`, passwordData)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .then((response) => {
         setNotification({ message: "Password updated successfully!", type: "success" });

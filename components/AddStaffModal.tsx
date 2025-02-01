@@ -1,7 +1,7 @@
 "use client";
 
 import { FC, useState, useEffect } from "react";
-import axios from "axios";
+import companyApi from "@/utils/apiCompany";
 
 interface AddStaffModalProps {
   isVisible: boolean;
@@ -46,8 +46,8 @@ const AddStaffModal: FC<AddStaffModalProps> = ({
       return;
     }
 
-    axios
-      .get(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`)
+    companyApi
+      .get(`/clinic/${companyId}/clinic-list`)
       .then((response) => {
         setClinics(response.data);
         if (response.data.length > 0) {

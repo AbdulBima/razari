@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import Modal from "@/components/PopAlert";
 import ConfirmationModal from "@/utils/ConfirmationModal";
+import companyApi from "@/utils/apiCompany";
 
 const states = [
   "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue",
@@ -61,9 +61,8 @@ const HospitalManagement = () => {
   const fetchHospitals = async (page: number, limit: number) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`, {
+      const response = await companyApi.get(`/clinic/${companyId}/clinic-list`, {
         params: { page, limit, sortField, sortOrder },
-        headers: { "X-Company-Id": companyId },
       });
       setHospitalList(response.data);
     } catch (error) {
@@ -85,14 +84,14 @@ const HospitalManagement = () => {
     try {
       setLoading(true);
       if (editingHospital) {
-        await axios.put(`http://127.0.0.1:8000/api/clinic/${companyId}/${editingHospital.clinicId}/update`, {
+        await companyApi.put(`/clinic/${companyId}/${editingHospital.clinicId}/update`, {
           name: newHospital.name,
           country: newHospital.country,
           state: newHospital.state,
         });
         showNotification("Hospital updated successfully", "success");
       } else {
-        await axios.post(`http://127.0.0.1:8000/api/clinic/${companyId}/create`, {
+        await companyApi.post(`/clinic/${companyId}/create`, {
           name: newHospital.name,
           country: newHospital.country,
           state: newHospital.state,
@@ -116,7 +115,7 @@ const HospitalManagement = () => {
 
     try {
       setLoading(true);
-      await axios.delete(`http://127.0.0.1:8000/api/clinic/${companyId}/delete/${selectedHospitalId}`);
+      await companyApi.delete(`/clinic/${companyId}/delete/${selectedHospitalId}`);
       fetchHospitals(currentPage, rowsPerPage);
       showNotification("Hospital deleted successfully", "success");
     } catch (error) {
@@ -133,10 +132,10 @@ const HospitalManagement = () => {
     try {
       setLoading(true);
       const endpoint = isActive
-        ? `http://127.0.0.1:8000/api/clinic/${companyId}/${id}/deactivate`
-        : `http://127.0.0.1:8000/api/clinic/${companyId}/${id}/activate`;
+        ? `/clinic/${companyId}/${id}/deactivate`
+        : `/clinic/${companyId}/${id}/activate`;
   
-      await axios.patch(endpoint);
+      await companyApi.patch(endpoint);
       fetchHospitals(currentPage, rowsPerPage);
       showNotification(
         `Hospital ${isActive ? "deactivated" : "activated"} successfully`,

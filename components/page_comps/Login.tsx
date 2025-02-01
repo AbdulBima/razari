@@ -212,7 +212,7 @@ const LoginPage = () => {
             Forgot password?
           </button>
         </div>
-
+ 
         {/* Login Button */}
         {isLoading ? (
           <div className="w-full py-2 flex items-center justify-center rounded-full bg-gray-300 cursor-not-allowed mb-4">

@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,6 +15,7 @@ import {
 } from "chart.js";
 
 import { ChartData } from "chart.js";
+import companyApi from "@/utils/apiCompany";
 
 ChartJS.register(
   CategoryScale,
@@ -42,8 +42,8 @@ const GBirthTabChart = ({ companyId }: { companyId: string }) => {
   
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/months-count`;
-        const { data } = await axios.get(url);
+        const url = `/birth-records/${companyId}/all/months-count`;
+        const { data } = await companyApi.get(url);
   
   
         setLineChartData({
@@ -65,8 +65,8 @@ const GBirthTabChart = ({ companyId }: { companyId: string }) => {
   
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/gender-distribution`;
-        const { data } = await axios.get(url);
+        const url = `/birth-records/${companyId}/all/gender-distribution`;
+        const { data } = await companyApi.get(url);
   
         setPieChartData({
           labels: Object.keys(data.genderDistribution),
@@ -84,8 +84,8 @@ const GBirthTabChart = ({ companyId }: { companyId: string }) => {
   
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/birth-records/${companyId}/all/mode-distribution`;
-        const { data } = await axios.get(url);
+        const url = `/birth-records/${companyId}/all/mode-distribution`;
+        const { data } = await companyApi.get(url);
   
         setBarChartData({
           labels: Object.keys(data.modeDistribution),

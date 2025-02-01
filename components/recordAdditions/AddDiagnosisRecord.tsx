@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import axios from "axios";
 import Modal from "@/components/PopAlert";
+import staffApi from "@/utils/apiStaff";
 
 const diagnosisSchema = z.object({
   category: z.enum([
@@ -55,12 +54,9 @@ export default function AddDiagnosisRecord() {
     const payload = { ...data, time: new Date().toISOString() };
 
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/diagnosis/create",
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
+      const response = await staffApi.post(
+        "/diagnosis/create",
+        payload
       );
 
       if (response.status === 200) {
@@ -75,6 +71,7 @@ export default function AddDiagnosisRecord() {
           type: "error",
         });
       }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       setNotification({
         message: "Network error. Please try again.",

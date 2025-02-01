@@ -2,13 +2,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import { Category } from "@/types/types";
 import DashboardOverview from "@/components/dasboard/DashboardOverview";
 import ChartSection from "@/components/dasboard/ChartSection";
 import DiagnosisTable from "@/components/dasboard/DiagnosisTable";
 import Loader from "@/utils/loader";
+import companyApi from "@/utils/apiCompany";
 
 const Dashboard = () => {
  
@@ -39,20 +40,20 @@ const Dashboard = () => {
           deathsRes,
           emergenciesRes,
         ] = await Promise.all([
-          axios.get(
-            `http://127.0.0.1:8000/api/admissions/company/${companyId}/total-admissions`
+          companyApi.get(
+            `/admissions/company/${companyId}/total-admissions`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/diagnosis/company/${companyId}/total-diagnosis`
+          companyApi.get(
+            `/diagnosis/company/${companyId}/total-diagnosis`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/birth-records/company/${companyId}/total-birth-records`
+          companyApi.get(
+            `/birth-records/company/${companyId}/total-birth-records`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/death-records/company/${companyId}/total-deaths`
+          companyApi.get(
+            `/death-records/company/${companyId}/total-deaths`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/emergencies/company/${companyId}/total-emergencies`
+          companyApi.get(
+            `/emergencies/company/${companyId}/total-emergencies`
           ),
         ]);
 

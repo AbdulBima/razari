@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { DiagnosisRecord } from "@/types/types";
+import companyApi from "@/utils/apiCompany";
 
 const DiagnosisTable: React.FC = () => {
   const [diagnosisData, setDiagnosisData] = useState<DiagnosisRecord[]>([]);
@@ -25,8 +26,8 @@ const DiagnosisTable: React.FC = () => {
       }
 
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/api/diagnosis/company/${companyId}`, {
+        const response = await companyApi.get(
+          `/diagnosis/company/${companyId}`, {
             params: {
               skip: (currentPage - 1) * itemsPerPage,
               limit: itemsPerPage,

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -17,6 +17,7 @@ import {
 
 import { ChartData } from "chart.js";
 import { useRouter } from "next/navigation";
+import companyApi from "@/utils/apiCompany";
 
 ChartJS.register(
   CategoryScale,
@@ -55,8 +56,8 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/months-count`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${clinicId}/months-count`;
+        const { data } = await companyApi.get(url);
 
         setClinicDetails({
           clinicName: data.clinicName,
@@ -85,8 +86,8 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/demographics`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${clinicId}/demographics`;
+        const { data } = await companyApi.get(url);
 
         // Adjust pie chart to display demographic distribution (Adult-male, Adult-female, etc.)
         const demographicLabels = Object.keys(data.demographicDistribution);
@@ -108,8 +109,8 @@ const DeathCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/death-records/${clinicId}/cause-count`;
-        const { data } = await axios.get(url);
+        const url = `/death-records/${clinicId}/cause-count`;
+        const { data } = await companyApi.get(url);
 
         // Adjust bar chart to display cause distribution (accident, illness, others)
         const causeLabels = Object.keys(data.causeDistribution);

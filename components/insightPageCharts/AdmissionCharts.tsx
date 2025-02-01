@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -18,6 +17,7 @@ import {
 // Chart.js types for datasets
 import { ChartData } from "chart.js";
 import { useRouter } from "next/navigation";
+import companyApi from "@/utils/apiCompany";
 
 ChartJS.register(
   CategoryScale,
@@ -57,8 +57,8 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/months-count`;
-        const { data } = await axios.get(url);
+        const url = `/admissions/${clinicId}/months-count`;
+        const { data } = await companyApi.get(url);
 
         setClinicDetails({
           clinicName: data.clinicName,
@@ -85,8 +85,8 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/demographics`;
-        const { data } = await axios.get(url);
+        const url = `/admissions/${clinicId}/demographics`;
+        const { data } = await companyApi.get(url);
         setPieChartData({
           labels: Object.keys(data.demographicDistribution),
           datasets: [
@@ -103,8 +103,8 @@ const AdmissionCharts = ({ clinicId }: { clinicId: string }) => {
 
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/admissions/${clinicId}/gender-demographics`;
-        const { data } = await axios.get(url);
+        const url = `/admissions/${clinicId}/gender-demographics`;
+        const { data } = await companyApi.get(url);
 
         setBarChartData({
           labels: ["Male", "Female"],

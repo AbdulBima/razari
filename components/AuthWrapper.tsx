@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 

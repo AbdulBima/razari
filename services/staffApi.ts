@@ -1,34 +1,34 @@
 // services/staffApi.ts
-import axios from 'axios';
-
-const API_BASE_URL = 'http://127.0.0.1:8000/api/staff'; // Replace with your actual API base URL
+import companyApi from '@/utils/apiCompany';
 
 
 export const getStaffList = (companyId: string, skip: number, limit: number) => {
-    return axios.get(`${API_BASE_URL}/${companyId}/staff-list`, {
+    return companyApi.get(`staff/${companyId}/staff-list`, {
       params: { skip, limit },
     });
   };
   
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const createStaff = async (companyId: string, staffData: any) => {
-  return axios.post(`${API_BASE_URL}/${companyId}/create`, staffData);
+  return companyApi.post(`staff/${companyId}/create`, staffData);
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const updateStaff = async (companyId: string, staffId: string, updatedData: any) => {
-  return axios.put(`${API_BASE_URL}/${companyId}/${staffId}/stfx/update`, updatedData);
+  return companyApi.put(`staff/${companyId}/${staffId}/stfx/update`, updatedData);
 };
 
 export const deleteStaff = async (companyId: string, staffId: string) => {
-  return axios.delete(`${API_BASE_URL}/${companyId}/delete/${staffId}`);
+  return companyApi.delete(`staff/${companyId}/delete/${staffId}`);
 };
 
 export const activateStaff = async (companyId: string, staffId: string) => {
-  return axios.patch(`${API_BASE_URL}/${companyId}/${staffId}/activate`);
+  return companyApi.patch(`staff/${companyId}/${staffId}/activate`);
 };
 
 export const deactivateStaff = async (companyId: string, staffId: string) => {
-  return axios.patch(`${API_BASE_URL}/${companyId}/${staffId}/deactivate`);
+  return companyApi.patch(`staff/${companyId}/${staffId}/deactivate`);
 };
 
 export const updatePassword = async (
@@ -36,8 +36,8 @@ export const updatePassword = async (
     staffId: string,
     passwordData: { newPassword: string }
   ) => {
-    return axios.put(
-      `${API_BASE_URL}/${companyId}/${staffId}/update-password`,
+    return companyApi.put(
+      `staff/${companyId}/${staffId}/update-password`,
       passwordData
     );
   };

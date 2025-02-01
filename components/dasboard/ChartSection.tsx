@@ -1,8 +1,8 @@
 // ChartSection.tsx
 import React, { useEffect, useState } from "react";
 import { Line } from "react-chartjs-2";
-import axios from "axios";
 import "chart.js/auto";
+import companyApi from "@/utils/apiCompany";
 
 const ChartSection = () => {
   interface ChartData {
@@ -36,20 +36,20 @@ const ChartSection = () => {
           birthRes,
           admissionRes,
         ] = await Promise.all([
-          axios.get(
-            `http://127.0.0.1:8000/api/diagnosis/company/${companyId}/months-count`
+          companyApi.get(
+            `/diagnosis/company/${companyId}/months-count`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/emergencies/company/${companyId}/months-count`
+          companyApi.get(
+            `/emergencies/company/${companyId}/months-count`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/death-records/company/${companyId}/months-count`
+          companyApi.get(
+            `/death-records/company/${companyId}/months-count`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/birth-records/company/${companyId}/months-count`
+          companyApi.get(
+            `/birth-records/company/${companyId}/months-count`
           ),
-          axios.get(
-            `http://127.0.0.1:8000/api/admissions/company/${companyId}/months-count`
+          companyApi.get(
+            `/admissions/company/${companyId}/months-count`
           ),
         ]);
   

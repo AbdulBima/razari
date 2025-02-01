@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import companyApi from "@/utils/apiCompany";
 
 interface Clinic {
   clinicId: string;
@@ -23,7 +23,7 @@ const ClinicSelector = ({
       const companyId = localStorage.getItem("cmpx");
       if (companyId) {
         try {
-          const response = await axios.get<Clinic[]>(`http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`);
+          const response = await companyApi.get<Clinic[]>(`/clinic/${companyId}/clinic-list`);
           setClinics(response.data.filter((clinic) => clinic.status));
         } catch (error) {
           console.log("Error fetching clinics:", error);

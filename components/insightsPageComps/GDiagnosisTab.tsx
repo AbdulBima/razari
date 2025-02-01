@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GDiagnosisTabChart from "../insightsPageCompsCharts/GDiagnosisTabChart";
+import companyApi from "@/utils/apiCompany";
 
 interface Diagnosis {
   time: string;
@@ -37,8 +37,8 @@ const GDDiagnosisTab = () => {
     try {
       const skip = (currentPage - 1) * rowsPerPage;
       const limit = rowsPerPage;
-      const url = `http://127.0.0.1:8000/api/diagnosis/get/${companyId}/all?skip=${skip}&limit=${limit}`;
-      const response = await axios.get(url);
+      const url = `/diagnosis/get/${companyId}/all?skip=${skip}&limit=${limit}`;
+      const response = await companyApi.get(url);
       setDiagnosis(response.data.diagnosis);
       setTotalDiagnosis(response.data.total); // Store total diagnosis count
     } catch (error) {

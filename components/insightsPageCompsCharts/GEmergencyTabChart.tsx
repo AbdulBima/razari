@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Line, Pie, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,6 +15,7 @@ import {
 } from "chart.js";
 
 import { ChartData } from "chart.js";
+import companyApi from "@/utils/apiCompany";
 
 ChartJS.register(
   CategoryScale,
@@ -53,8 +53,8 @@ const GEmergencyTabCharts = ({ companyId }: { companyId: string }) => {
     // Fetch data for the line chart (month counts)
     const fetchLineChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/emergencies/${companyId}/all/months-count`;
-        const { data } = await axios.get(url);
+        const url = `/emergencies/${companyId}/all/months-count`;
+        const { data } = await companyApi.get(url);
 
         const abbreviatedMonths = abbreviateMonths(
           Object.keys(data.monthsCount)
@@ -80,8 +80,8 @@ const GEmergencyTabCharts = ({ companyId }: { companyId: string }) => {
     // Fetch data for the pie chart (type distribution)
     const fetchPieChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/emergencies/${companyId}/all/type-distribution`;
-        const { data } = await axios.get(url);
+        const url = `/emergencies/${companyId}/all/type-distribution`;
+        const { data } = await companyApi.get(url);
 
         setPieChartData({
           labels: Object.keys(data.typeDistribution),
@@ -106,8 +106,8 @@ const GEmergencyTabCharts = ({ companyId }: { companyId: string }) => {
     // Fetch data for the bar chart (severity distribution)
     const fetchBarChartData = async () => {
       try {
-        const url = `http://127.0.0.1:8000/api/emergencies/${companyId}/all/severity-count`;
-        const { data } = await axios.get(url);
+        const url = `/emergencies/${companyId}/all/severity-count`;
+        const { data } = await companyApi.get(url);
 
         setBarChartData({
           labels: Object.keys(data.severityCounts),

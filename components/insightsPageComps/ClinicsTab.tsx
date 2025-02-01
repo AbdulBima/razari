@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
+import companyApi from "@/utils/apiCompany";
 
 interface Clinic {
   id: string;
@@ -33,8 +34,8 @@ const ClinicsTab = () => {
           return;
         }
 
-        const response = await axios.get<Clinic[]>(
-          `http://127.0.0.1:8000/api/clinic/${companyId}/clinic-list`
+        const response = await companyApi.get<Clinic[]>(
+          `/clinic/${companyId}/clinic-list`
         );
         setClinics(response.data);
       } catch (error) {
