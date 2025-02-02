@@ -22,7 +22,7 @@ const StaffAuthWrapper = ({ children }: { children: React.ReactNode }) => {
       }
 
       axios
-        .post(`http://127.0.0.1:8000/api/staff/verify-token`, { stf: token })
+        .post(`https://razari-backend.onrender.com/api/staff/verify-token`, { stf: token })
         .then((response) => {
           if (response.data.valid) {
             setIsAuthenticated(true); // Token is valid

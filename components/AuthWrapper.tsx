@@ -22,7 +22,7 @@ const AuthWrapper = ({ children }: { children: React.ReactNode }) => {
       }
 
       axios
-        .post(`http://127.0.0.1:8000/api/company/verify-token`, { cpm: token })
+        .post(`https://razari-backend.onrender.com/api/company/verify-token`, { cpm: token })
         .then((response) => {
           if (response.data.valid) {
             setIsAuthenticated(true); // Token is valid
