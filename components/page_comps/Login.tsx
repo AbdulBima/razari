@@ -28,8 +28,8 @@ const LoginPage = () => {
       // Determine endpoint based on role
       const endpoint =
         role === "Company"
-          ? "http://127.0.0.1:8000/api/company/login"
-          : "http://127.0.0.1:8000/api/staff/login";
+          ? "https://razari-backend.onrender.com/api/company/login"
+          : "https://razari-backend.onrender.com/api/staff/login";
 
       // Make API call
       const response = await axios.post(endpoint, { email, password });
