@@ -35,7 +35,7 @@ const AddRecordPage = () => {
     <div className="p-4 poppins-regular">
   <div className="md:hidden flex px-4 md:px-10 mt-2">
     <Link
-      href="/recent-upload"
+      href="/sttx/recent-upload"
       className="text-gray-700 flex flex-row justify-center items-center space-x-2 md:text-lg text-sm underline hover:text-orange-600 transition duration-300"
     >
       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 32 32">
