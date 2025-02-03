@@ -39,7 +39,7 @@ const InsightsPage = () => {
       {/* Mobile Dropdown */}
       <div className="sm:hidden mt-4">
         <select
-          className="w-full border text-xs border-gray-300 rounded-md p-2 text-gray-700"
+          className="w-full border text-xs border-gray-300 rounded-md px-3 py-5 text-gray-700"
           value={activeTab}
           onChange={(e) => setActiveTab(e.target.value)}
         >

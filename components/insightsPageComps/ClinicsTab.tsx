@@ -116,7 +116,7 @@ const ClinicsTab = () => {
             </div>
             {/* Dropdown for Mobile */}
             <select
-              className="block md:hidden w-full my-1 px-4 py-2 bg-gray-200 rounded-lg text-sm"
+              className="block md:hidden w-full my-1 px-4 md:py-2 py-4 bg-gray-200 rounded-lg text-sm"
               onChange={(e) => handleSort(e.target.value as keyof Clinic)}
             >
               <option value="">Sort by</option>

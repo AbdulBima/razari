@@ -116,7 +116,7 @@ const LoginPage = () => {
               id="role"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#356966]"
+              className="w-full px-3 md:py-2 py-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#356966]"
             >
               <option value="Company">Company</option>
               <option value="Staff">Staff</option>
