@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GDeathTabChart from "../insightsPageCompsCharts/GDeathTabChart";
 import companyApi from "@/utils/apiCompany";
@@ -124,8 +123,7 @@ const GDeathTab = () => {
                 </button>
               </div>
               <div>
-                <RecommendationModal route="death" companyId={localStorage.getItem("cmpx") as string}  clinicId="394974ea" />
-              </div>
+                 </div>
             </div>
 
             {/* Table */}

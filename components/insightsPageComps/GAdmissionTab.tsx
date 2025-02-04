@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 
-import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GAdmissionTabChart from "../insightsPageCompsCharts/GAdmissionTabChart";
 import companyApi from "@/utils/apiCompany";
@@ -107,13 +106,7 @@ const GAdmissionTab = () => {
                 )}
               </div>
 
-              <div>
-                <RecommendationModal
-                  route="admissions"
-                  clinicId="12345"
-                  companyId="67890"
-                />
-              </div>
+            
             </div>
 
             <div className="block md:hidden mb-4">
@@ -130,11 +123,6 @@ const GAdmissionTab = () => {
                 <option value="submitterId">Submitter</option>
               </select>
 
-              <RecommendationModal
-                route="admissions"
-                clinicId="12345"
-                companyId="67890"
-              />
             </div>
 
             <div className="overflow-x-auto">

@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
 import AdmissionCharts from "@/components/insightPageCharts/AdmissionCharts";
-
-import RecommendationModal from "@/components/RecommendationModal";
 import companyApi from "@/utils/apiCompany";
 
 interface Admission {
@@ -129,13 +127,7 @@ const AdmissionPage = () => {
                 </button>
               </div>
 
-              <div>
-                <RecommendationModal
-                  route="admissions"
-                  clinicId="12345"
-                  companyId="67890"
-                />
-              </div>
+              
             </div>
 
             {/* Dropdown for sorting on mobile devices */}
@@ -153,11 +145,7 @@ const AdmissionPage = () => {
                 <option value="submitterId">Submitter</option>
               </select>
 
-              <RecommendationModal
-                  route="admissions"
-                  clinicId="12345"
-                  companyId="67890"
-                />
+         
             </div>
 
             {/* Table */}

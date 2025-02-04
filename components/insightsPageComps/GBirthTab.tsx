@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 
-
-import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GBirthTabChart from "../insightsPageCompsCharts/GBirthTabChart";
 import companyApi from "@/utils/apiCompany";
@@ -126,8 +124,7 @@ const GBirthTab = () => {
                 </button>
               </div>
               <div>
-                <RecommendationModal route="birth" companyId={localStorage.getItem("cmpx") as string} clinicId="394974ea" />
-              </div>
+                 </div>
             </div>
 
             {/* Table */}

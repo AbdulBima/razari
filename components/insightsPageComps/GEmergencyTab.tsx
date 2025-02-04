@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 
 import Loader from "@/utils/loader";
-import RecommendationModal from "@/components/RecommendationModal";
 import GEmergencyTabCharts from "../insightsPageCompsCharts/GEmergencyTabChart";
 import companyApi from "@/utils/apiCompany";
 
@@ -122,7 +121,6 @@ const GEmergencyTab = () => {
                 </button>
               </div>
               <div>
-                <RecommendationModal route="birth" companyId={localStorage.getItem("cmpx") as string} clinicId="394974ea" />
               </div>
             </div>
 

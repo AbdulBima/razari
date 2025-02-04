@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
-import RecommendationModal from "@/components/RecommendationModal";
 import DeathCharts from "@/components/insightPageCharts/DeathCharts";
 import companyApi from "@/utils/apiCompany";
 
@@ -116,8 +115,7 @@ const DeathInsight = () => {
                 </button>
               </div>
               <div>
-                <RecommendationModal route="death" clinicId={clinicId} companyId="394974ea" />
-              </div>
+                 </div>
             </div>
 
             {/* Table */}
