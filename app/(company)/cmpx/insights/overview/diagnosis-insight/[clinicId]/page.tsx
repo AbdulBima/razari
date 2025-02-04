@@ -1,11 +1,8 @@
 "use client";
 
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/navigation/Breadcrumb";
-import RecommendationModal from "@/components/RecommendationModal";
-
 import DiagnosisCharts from "@/components/insightPageCharts/DiagnosisCharts";
 import companyApi from "@/utils/apiCompany";
 
@@ -31,6 +28,11 @@ const DiagnosisInsight = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [totalDiagnosis, setTotalDiagnosis] = useState(0);
 
+  // New state for recommendation modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recommendation, setRecommendation] = useState("");
+  const [loadingRecommendation, setLoadingRecommendation] = useState(false);
+
   // Fetch diagnosis data
   const fetchDiagnosis = async () => {
     setLoading(true);
@@ -51,7 +53,7 @@ const DiagnosisInsight = () => {
     if (clinicId) {
       fetchDiagnosis();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clinicId, currentPage]); // Trigger fetch on clinicId or currentPage change
 
   // Sorting functionality
@@ -75,7 +77,27 @@ const DiagnosisInsight = () => {
 
   const totalPages = Math.ceil(totalDiagnosis / rowsPerPage);
 
- 
+  // New function to fetch AI recommendation, now triggered when modal opens
+  const fetchRecommendation = async () => {
+    setLoadingRecommendation(true);
+    setRecommendation(""); // Clear any previous recommendation
+    try {
+      const url = `/diagnosis/${clinicId}/diagnosis-recommendation`;
+      const response = await companyApi.get(url);
+      // Assuming the response returns a "recommendations" field
+      setRecommendation(response.data.recommendations);
+    } catch (error) {
+      console.log("Error fetching recommendation:", error);
+      setRecommendation("An error occurred while fetching the recommendation.");
+    }
+    setLoadingRecommendation(false);
+  };
+
+  // Handler for button click that opens the modal and fetches recommendation
+  const handleRecommendationClick = () => {
+    setIsModalOpen(true);
+    fetchRecommendation();
+  };
 
   return (
     <div className="poppins-regular px-8 md:pt-2 w-full bg-gray-50 h-full md:overscroll-y-none md:overflow-y-hidden">
@@ -83,9 +105,9 @@ const DiagnosisInsight = () => {
       <DiagnosisCharts clinicId={clinicId} />
 
       {loading ? (
-       <div className="flex justify-center items-center mt-8">
-       <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
-     </div>
+        <div className="flex justify-center items-center mt-8">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-700"></div>
+        </div>
       ) : (
         <div className="bg-white grid grid-cols-4 gap-4 shadow-md p-2 mt-6 rounded-lg border border-gray-200">
           <div className="col-span-4">
@@ -97,45 +119,41 @@ const DiagnosisInsight = () => {
                   className="p-2 text-xs bg-gray-200 rounded"
                   onClick={() => handleSort("time")}
                 >
-                  Time{" "}
-                  {sortColumn === "time" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Time {sortColumn === "time" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
                 <button
                   className="p-2 text-xs bg-gray-200 rounded"
                   onClick={() => handleSort("category")}
                 >
-                  Category{" "}
-                  {sortColumn === "category" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Category {sortColumn === "category" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
                 <button
                   className="p-2 text-xs bg-gray-200 rounded"
                   onClick={() => handleSort("diagnosis")}
                 >
-                  Diagnosis{" "}
-                  {sortColumn === "diagnosis" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Diagnosis {sortColumn === "diagnosis" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
                 <button
                   className="p-2 text-xs bg-gray-200 rounded"
                   onClick={() => handleSort("ageGroup")}
                 >
-                  Age Group{" "}
-                  {sortColumn === "ageGroup" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Age Group {sortColumn === "ageGroup" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
                 <button
                   className="p-2 text-xs bg-gray-200 rounded"
                   onClick={() => handleSort("submitterId")}
                 >
-                  Submitter{" "}
-                  {sortColumn === "submitterId" && (sortOrder === "asc" ? "▲" : "▼")}
+                  Submitter {sortColumn === "submitterId" && (sortOrder === "asc" ? "▲" : "▼")}
                 </button>
               </div>
 
               <div>
-                <RecommendationModal
-                  route="admissions"
-                  clinicId="12345"
-                  companyId="67890"
-                />
+                <button
+                  onClick={handleRecommendationClick}
+                  className="p-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  AI Recommendation
+                </button>
               </div>
             </div>
 
@@ -154,11 +172,12 @@ const DiagnosisInsight = () => {
                 <option value="submitterId">Submitter</option>
               </select>
 
-              <RecommendationModal
-                route="diagnosis"
-                clinicId="12345"
-                companyId="67890"
-              />
+              <button
+                onClick={handleRecommendationClick}
+                className="w-full p-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                AI Recommendation
+              </button>
             </div>
 
             {/* Table */}
@@ -232,10 +251,40 @@ const DiagnosisInsight = () => {
           </div>
         </div>
       )}
+
+      {/* Recommendation Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          {/* Modal overlay */}
+          <div
+            className="absolute inset-0 bg-black opacity-50"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
+          {/* Modal content */}
+          <div className="relative bg-white rounded-lg shadow-xl p-6 max-w-lg w-full z-10">
+            <button
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+              onClick={() => setIsModalOpen(false)}
+            >
+              ✕
+            </button>
+            <h2 className="text-xl font-semibold mb-4">AI Recommendations</h2>
+            <div className="text-sm text-gray-700 whitespace-pre-line">
+              {loadingRecommendation ? (
+                <div className="flex justify-center items-center">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-blue-600"></div>
+                </div>
+              ) : (
+                recommendation
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
 export default DiagnosisInsight;
 
-export const runtime = 'edge';
+export const runtime = "edge";
