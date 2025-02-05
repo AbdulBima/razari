@@ -254,33 +254,33 @@ const DiagnosisInsight = () => {
 
       {/* Recommendation Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          {/* Modal overlay */}
-          <div
-            className="absolute inset-0 bg-black opacity-50"
-            onClick={() => setIsModalOpen(false)}
-          ></div>
-          {/* Modal content */}
-          <div className="relative bg-white rounded-lg shadow-xl p-6 max-w-lg w-full z-10">
-            <button
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-              onClick={() => setIsModalOpen(false)}
-            >
-              ✕
-            </button>
-            <h2 className="text-xl font-semibold mb-4">AI Recommendations</h2>
-            <div className="text-sm text-gray-700 whitespace-pre-line">
-              {loadingRecommendation ? (
-                <div className="flex justify-center items-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-blue-600"></div>
-                </div>
-              ) : (
-                recommendation
-              )}
-            </div>
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    {/* Modal overlay */}
+    <div
+      className="absolute inset-0 bg-black opacity-50"
+      onClick={() => setIsModalOpen(false)}
+    ></div>
+    {/* Modal content */}
+    <div className="relative bg-white rounded-lg shadow-xl p-6 max-w-3xl w-full z-10 overflow-y-auto max-h-[90vh]">
+      <button
+        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        onClick={() => setIsModalOpen(false)}
+      >
+        ✕
+      </button>
+      <h2 className="text-xl font-semibold mb-4">AI Recommendations</h2>
+      <div className="text-sm text-gray-700 whitespace-pre-line">
+        {loadingRecommendation ? (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-blue-600"></div>
           </div>
-        </div>
-      )}
+        ) : (
+          recommendation
+        )}
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
