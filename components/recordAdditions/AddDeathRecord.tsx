@@ -110,13 +110,13 @@ export default function AddDeathRecord() {
         {/* Category of Deceased */}
         <div>
           <label className="block text-sm font-medium text-gray-700">
-            Category
+            Age Group
           </label>
           <select
             {...register("category")}
             className="mt-1 block w-full p-3 bg-gray-100 text-gray-900 rounded-xl focus:ring-2 focus:ring-[#356966] outline-none transition duration-200"
           >
-            <option value="">Select Category</option>
+            <option value="">Select</option>
             <option value="Adult-male">Adult Male</option>
             <option value="Child-male">Child Male</option>
             <option value="Adult-female">Adult Female</option>

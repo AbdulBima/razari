@@ -124,7 +124,7 @@ const DeathInsight = () => {
                 <thead>
                   <tr className="bg-[#356966] text-white">
                     <th className="border border-gray-300 p-1 text-xs text-center">Time</th>
-                    <th className="border border-gray-300 p-1 text-xs text-center">Category</th>
+                    <th className="border border-gray-300 p-1 text-xs text-center">Age Group</th>
                     <th className="border border-gray-300 p-1 text-xs text-center">Cause</th>
                     <th className="border border-gray-300 p-1 text-xs text-center">Submitter</th>
                   </tr>

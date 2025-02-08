@@ -23,8 +23,14 @@ const GDDiagnosisTab = () => {
   const [sortColumn, setSortColumn] = useState<keyof Diagnosis | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [totalDiagnosis, setTotalDiagnosis] = useState(0);
-
+ // New state for recommendation modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recommendation, setRecommendation] = useState("");
+  const [loadingRecommendation, setLoadingRecommendation] = useState(false);
   // Fetch diagnosis data
+
+  const companyId = localStorage.getItem("cmpx");
+
   const fetchDiagnosis = async () => {
     const companyId = localStorage.getItem("cmpx");
 
@@ -74,6 +80,26 @@ const GDDiagnosisTab = () => {
     setCurrentPage(newPage); // Update current page, triggers re-fetch
   };
 
+  const fetchRecommendation = async () => {
+    setLoadingRecommendation(true);
+    setRecommendation(""); // Clear any previous recommendation
+    try {
+      const url = `/diagnosis/company/${companyId}/diagnosis-recommendation`;
+      const response = await companyApi.get(url);
+      // Assuming the response returns a "recommendations" field
+      setRecommendation(response.data.recommendations);
+    } catch (error) {
+      console.log("Error fetching recommendation:", error);
+      setRecommendation("An error occurred while fetching the recommendation.");
+    }
+    setLoadingRecommendation(false);
+  };
+
+   // Handler for button click that opens the modal and fetches recommendation
+   const handleRecommendationClick = () => {
+    setIsModalOpen(true);
+    fetchRecommendation();
+  };
   const totalPages = Math.ceil(totalDiagnosis / rowsPerPage);
 
   return (
@@ -158,11 +184,12 @@ const GDDiagnosisTab = () => {
                 <option value="submitterId">Submitter</option>
               </select>
 
-              <RecommendationModal
-                route="diagnosis"
-                clinicId="12345"
-                companyId={localStorage.getItem("cmpx") as string}
-              />
+             <button
+                onClick={handleRecommendationClick}
+                className="w-full p-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                AI Recommendation
+              </button>
             </div>
 
             {/* Table */}
@@ -242,6 +269,36 @@ const GDDiagnosisTab = () => {
           </div>
         </div>
       )}
+
+         {/* Recommendation Modal */}
+         {isModalOpen && (
+  <div className="fixed inset-0 flex items-center justify-center z-50">
+    {/* Modal overlay */}
+    <div
+      className="absolute inset-0 bg-black opacity-50"
+      onClick={() => setIsModalOpen(false)}
+    ></div>
+    {/* Modal content */}
+    <div className="relative bg-white rounded-lg shadow-xl p-6 max-w-3xl w-full z-10 overflow-y-auto max-h-[90vh]">
+      <button
+        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+        onClick={() => setIsModalOpen(false)}
+      >
+        ✕
+      </button>
+      <h2 className="text-xl font-semibold mb-4">AI Recommendations</h2>
+      <div className="text-sm text-gray-700 whitespace-pre-line">
+        {loadingRecommendation ? (
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-blue-600"></div>
+          </div>
+        ) : (
+          recommendation
+        )}
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
