@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import RecommendationModal from "@/components/RecommendationModal";
 import Loader from "@/utils/loader";
 import GDiagnosisTabChart from "../insightsPageCompsCharts/GDiagnosisTabChart";
 import companyApi from "@/utils/apiCompany";
@@ -161,11 +160,12 @@ const GDDiagnosisTab = () => {
               </div>
 
               <div>
-                <RecommendationModal
-                  route="admissions"
-                  clinicId="12345"
-                  companyId="67890"
-                />
+              <button
+                onClick={handleRecommendationClick}
+                className="w-full p-2 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                AI Recommendation
+              </button>
               </div>
             </div>
 
