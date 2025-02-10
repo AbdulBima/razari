@@ -5,14 +5,17 @@ import staffApi from '@/utils/apiStaff';
 
 const RecentDiagnosisRecords = () => {
   interface Record {
-    time: string;
-    diagnosis: string;
-    category: string;
-    ageGroup: string;
+     submitterId: string ,
+    time: string,
+    category: string,
+    diagnosis: string,
+    ageGroup: string,
+    companyId: string,
+    clinicId: string
   }
 
   interface RecordsResponse {
-    records: Record[];
+    diagnosis: Record[];
   }
 
   const [records, setRecords] = useState<RecordsResponse | null>(null);
@@ -74,7 +77,7 @@ const RecentDiagnosisRecords = () => {
           </tr>
         </thead>
         <tbody>
-          {records?.records?.map((record: Record, index: number) => (
+          {records?.diagnosis?.map((record: Record, index: number) => (
             <tr
               key={index}
               className="border-t border-gray-200 hover:bg-gray-50 transition-all duration-200 ease-in-out"
